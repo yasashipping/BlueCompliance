@@ -363,7 +363,7 @@ function buildStyle(pn) {
   const zoneColor = ['get', 'color'];
   return {
     version: 8, name: 'BlueCompliance ' + P.name,
-    glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
+    glyphs: (CFG.glyphsUrl || 'fonts/{fontstack}/{range}.pbf'),
     sources: {
       chart: { type: 'vector', url: 'pmtiles://' + (CFG.chartUrls.base || CFG.chartUrl), attribution: 'Chart: Natural Earth 1:10m · not for navigation' },
       chart_bathy: { type: 'vector', url: 'pmtiles://' + (CFG.chartUrls.bathy || CFG.chartUrl) },
@@ -435,13 +435,13 @@ const map = (() => {
   document.getElementById('layers').addEventListener('change', e => { if (e.target.id !== 'palette') applyLayers(); });
   // hover + click
   m.on('mousemove', e => {
-    const { lng, lat } = e.lngLat; const z = ZONES.find(z => z.geom && pipGeom(z.geom, lng, lat)); const hb = document.getElementById('hoverbox');
+    const { lng, lat } = e.lngLat.wrap(); const z = ZONES.find(z => z.geom && pipGeom(z.geom, lng, lat)); const hb = document.getElementById('hoverbox');
     document.getElementById('mapinfo').textContent = `z ${m.getZoom().toFixed(1)} · cursor ${fmtCoord(lat, true)} ${fmtCoord(lng, false)}`;
     if ((z && z.id) !== st.hover) { st.hover = z ? z.id : null; applyHot(); }
     if (z) { hb.style.display = 'block'; hb.innerHTML = `<b>${z.name}</b><br>${z.designations.map(d => d.kind === 'eca' ? `ECA (${(d.pollutants || []).join('/')})` : d.kind === 'pssa' ? 'PSSA' : `Annex ${d.annex} Special Area`).join(' · ')}<br><span style="opacity:.7">${z.geometry_status.replace(/_/g, ' ')}</span>`; } else hb.style.display = 'none';
   });
-  m.on('click', e => ui.setPosition(e.lngLat.lat, e.lngLat.lng, true));
-  m.on('move', () => { const c = m.getCenter(); document.getElementById('mapinfo').textContent = `z ${m.getZoom().toFixed(1)} · ${fmtCoord(c.lat, true)} ${fmtCoord(c.lng, false)}`; });
+  m.on('click', e => { const w = e.lngLat.wrap(); ui.setPosition(w.lat, w.lng, true); });
+  m.on('move', () => { const c = m.getCenter().wrap(); document.getElementById('mapinfo').textContent = `z ${m.getZoom().toFixed(1)} · ${fmtCoord(c.lat, true)} ${fmtCoord(c.lng, false)}`; });
   return { m, st, refresh, renderDepthKey, draw() { applyHot(); }, resize() { m.resize(); },
     setMarker(lat, lon, fly) { st.marker = [lon, lat]; applyMarker(); if (fly) m.flyTo({ center: [lon, lat] }); },
     setHits(ids) { st.hits = new Set(ids); applyHot(); } };
