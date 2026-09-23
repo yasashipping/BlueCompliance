@@ -287,7 +287,8 @@ code{ font-family:var(--mono); font-size:12px; }
    Chart: chart.pmtiles (vector tiles from Natural Earth, built by chart/build_chart.py)
    Reference data: Supabase/PostGIS when configured in config.js, else data/*.json
    ===================================================================== */
-const CFG = Object.assign({ supabaseUrl: '', supabaseAnonKey: '', chartUrl: 'chart/chart.pmtiles', saveEvaluations: false }, window.BC_CONFIG || {});
+const CFG = Object.assign({ supabaseUrl: '', supabaseAnonKey: '', chartUrl: '', chartUrls: {}, saveEvaluations: false }, window.BC_CONFIG || {});
+if (!CFG.chartUrl && !CFG.chartUrls.base) CFG.chartUrls = { base: 'chart/chart-base.pmtiles', bathy: 'chart/chart-bathy.pmtiles', contour: 'chart/chart-contour.pmtiles' };
 const HAS_DB = !!(CFG.supabaseUrl && CFG.supabaseAnonKey);
 const DEG = Math.PI / 180, R_NM = 3440.065;
 
@@ -364,17 +365,19 @@ function buildStyle(pn) {
     version: 8, name: 'BlueCompliance ' + P.name,
     glyphs: 'https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf',
     sources: {
-      chart: { type: 'vector', url: 'pmtiles://' + CFG.chartUrl, attribution: 'Chart: Natural Earth 1:10m · not for navigation' },
+      chart: { type: 'vector', url: 'pmtiles://' + (CFG.chartUrls.base || CFG.chartUrl), attribution: 'Chart: Natural Earth 1:10m · not for navigation' },
+      chart_bathy: { type: 'vector', url: 'pmtiles://' + (CFG.chartUrls.bathy || CFG.chartUrl) },
+      chart_contour: { type: 'vector', url: 'pmtiles://' + (CFG.chartUrls.contour || CFG.chartUrl) },
       zones: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } },
       grat: { type: 'geojson', data: graticule() },
       marker: { type: 'geojson', data: { type: 'FeatureCollection', features: [] } }
     },
     layers: [
       { id: 'bg', type: 'background', paint: { 'background-color': P.bands[0] } },
-      { id: 'bathy', type: 'fill', source: 'chart', 'source-layer': 'bathy', layout: { 'fill-sort-key': ['get', 'depth'] }, paint: { 'fill-color': bandColor, 'fill-antialias': false } },
-      { id: 'contour-shallow', type: 'line', source: 'chart', 'source-layer': 'contour', filter: ['==', ['get', 'depth'], 200], paint: { 'line-color': P.contour, 'line-width': ['interpolate', ['linear'], ['zoom'], 2, .6, 8, 1.2] } },
-      { id: 'contour-deep', type: 'line', source: 'chart', 'source-layer': 'contour', filter: ['!=', ['get', 'depth'], 200], minzoom: 2, paint: { 'line-color': P.contour, 'line-width': .7, 'line-dasharray': [4, 3] } },
-      { id: 'contour-label', type: 'symbol', source: 'chart', 'source-layer': 'contour', minzoom: 3.5, layout: { 'symbol-placement': 'line', 'symbol-spacing': 320, 'text-field': ['to-string', ['get', 'depth']], 'text-size': 10, 'text-font': ['Open Sans Regular'], 'text-rotation-alignment': 'map', 'text-pitch-alignment': 'viewport', 'text-max-angle': 25 }, paint: { 'text-color': P.label, 'text-halo-color': P.halo, 'text-halo-width': 1.2 } },
+      { id: 'bathy', type: 'fill', source: 'chart_bathy', 'source-layer': 'bathy', layout: { 'fill-sort-key': ['get', 'depth'] }, paint: { 'fill-color': bandColor, 'fill-antialias': false } },
+      { id: 'contour-shallow', type: 'line', source: 'chart_contour', 'source-layer': 'contour', filter: ['==', ['get', 'depth'], 200], paint: { 'line-color': P.contour, 'line-width': ['interpolate', ['linear'], ['zoom'], 2, .6, 8, 1.2] } },
+      { id: 'contour-deep', type: 'line', source: 'chart_contour', 'source-layer': 'contour', filter: ['!=', ['get', 'depth'], 200], minzoom: 2, paint: { 'line-color': P.contour, 'line-width': .7, 'line-dasharray': [4, 3] } },
+      { id: 'contour-label', type: 'symbol', source: 'chart_contour', 'source-layer': 'contour', minzoom: 3.5, layout: { 'symbol-placement': 'line', 'symbol-spacing': 320, 'text-field': ['to-string', ['get', 'depth']], 'text-size': 10, 'text-font': ['Open Sans Regular'], 'text-rotation-alignment': 'map', 'text-pitch-alignment': 'viewport', 'text-max-angle': 25 }, paint: { 'text-color': P.label, 'text-halo-color': P.halo, 'text-halo-width': 1.2 } },
       { id: 'land', type: 'fill', source: 'chart', 'source-layer': 'land', paint: { 'fill-color': P.land } },
       { id: 'minor', type: 'fill', source: 'chart', 'source-layer': 'minor', minzoom: 4, paint: { 'fill-color': P.land, 'fill-outline-color': P.landEdge } },
       { id: 'lake', type: 'fill', source: 'chart', 'source-layer': 'lake', minzoom: 2, paint: { 'fill-color': P.lake } },
