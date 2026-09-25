@@ -1,1 +1,1281 @@
-{"_schema":"bluecompliance.rules.v1","_dsl":{"trigger.designation":"fires once per zone containing the position that carries a designation of this kind/annex which is IN EFFECT on the evaluation date","trigger.designation_not_in_effect":"fires for zones containing the position whose designation of this kind/annex exists but has no in-effect date yet","trigger.no_designation":"fires when NO zone containing the position has an in-effect designation of this kind/annex (i.e. 'outside special area')","trigger.zone_ids":"fires for the listed zone ids only","trigger.global":"always fires (position independent)","applies_to.ship_type":"list of: oil_tanker | cargo | passenger | other","logic":"fixed | sulphur_limit | nox_tier3 | annex4_baltic_passenger","fact_level":"REGULATORY FACT | INTERPRETATION | SOFTWARE RECOMMENDATION | REQUIRES VERIFICATION"},"rules":[{"id":"R-AI-SA-TANKER-CARGO","annex":"I","regulation":"MARPOL Annex I reg. 34.3","category":"Oil – cargo area (oil tankers)","trigger":{"designation":{"kind":"special_area","annex":"I"}},"applies_to":{"ship_type":["oil_tanker"]},"logic":"fixed","status":"PROHIBITED","summary":"Any discharge into the sea of oil or oily mixtures from the cargo area of an oil tanker is prohibited while in an Annex I Special Area (clean/segregated ballast and the reg. 4 exceptions excepted).","conditions":[],"fact_level":"REGULATORY FACT (summarised from Annex I reg. 34.3 – verify wording against consolidated text)","sources":["SRC-MARPOL-CONS","SRC-IMO-CIRC778-R4"]},{"id":"R-AI-SA-MACHINERY","annex":"I","regulation":"MARPOL Annex I reg. 15.3","category":"Oil – machinery space bilges","trigger":{"designation":{"kind":"special_area","annex":"I"}},"applies_to":{"ship_type":["oil_tanker","cargo","passenger","other"]},"logic":"fixed","status":"RESTRICTED","summary":"Discharge of oily bilge water from machinery spaces in an Annex I Special Area is prohibited unless ALL conditions are met (ships ≥ 400 GT).","conditions":["Ship is proceeding en route","Oily mixture is processed through oil filtering equipment meeting reg. 14.7 (15 ppm alarm and automatic stopping device)","Oil content of the effluent without dilution does not exceed 15 ppm","Oily mixture does not originate from cargo pump-room bilges (oil tankers)","Oily mixture is not mixed with oil cargo residues"],"fact_level":"REGULATORY FACT (summarised from Annex I reg. 15.3 – verify wording)","sources":["SRC-MARPOL-CONS","SRC-IMO-CIRC778-R4"]},{"id":"R-AI-OUTSIDE-MACHINERY","annex":"I","regulation":"MARPOL Annex I reg. 15.2","category":"Oil – machinery space bilges","trigger":{"no_designation":{"kind":"special_area","annex":"I"}},"applies_to":{"ship_type":["oil_tanker","cargo","passenger","other"]},"logic":"fixed","status":"RESTRICTED","summary":"Outside Annex I Special Areas, machinery-space bilge discharge is permitted only when the ship is en route, the effluent passes through approved oil filtering equipment (reg. 14) and its oil content does not exceed 15 ppm; not from cargo pump-room bilges and not mixed with cargo residues (ships ≥ 400 GT).","conditions":["En route","Approved oil filtering equipment (reg. 14)","≤ 15 ppm","Not cargo pump-room bilges / not mixed with cargo residues"],"fact_level":"REGULATORY FACT (summarised from Annex I reg. 15.2 – verify wording)","sources":["SRC-MARPOL-CONS"]},{"id":"R-AI-OUTSIDE-TANKER-CARGO","annex":"I","regulation":"MARPOL Annex I reg. 34.1","category":"Oil – cargo area (oil tankers)","trigger":{"no_designation":{"kind":"special_area","annex":"I"}},"applies_to":{"ship_type":["oil_tanker"]},"logic":"fixed","status":"RESTRICTED","summary":"Outside Annex I Special Areas, discharge of oil/oily mixtures from the cargo area of an oil tanker is prohibited unless all reg. 34.1 conditions are met.","conditions":["Tanker is more than 50 nautical miles from the nearest land","Tanker is proceeding en route","Instantaneous rate of discharge of oil does not exceed 30 litres per nautical mile","Total quantity discharged does not exceed 1/30,000 of the total quantity of the particular cargo (1/15,000 for tankers delivered on or before 31 Dec 1979)","Oil discharge monitoring and control system (ODME) and slop tank arrangements in operation (reg. 29 and 31)"],"fact_level":"REGULATORY FACT (summarised from Annex I reg. 34.1 – verify wording)","sources":["SRC-MARPOL-CONS"]},{"id":"R-AI-ANTARCTIC-ANY-OIL","annex":"I","regulation":"MARPOL Annex I reg. 15.4 and reg. 34.4","category":"Oil – all discharges","trigger":{"zone_ids":["Z-ANTARCTIC"]},"applies_to":{"ship_type":["oil_tanker","cargo","passenger","other"]},"logic":"fixed","status":"PROHIBITED","summary":"In the Antarctic area any discharge into the sea of oil or oily mixtures from any ship is prohibited (the 15 ppm bilge exception does not apply).","conditions":[],"fact_level":"REGULATORY FACT (summarised – verify wording)","sources":["SRC-MARPOL-CONS","SRC-IMO-CIRC778-R4"]},{"id":"R-AI-ANTARCTIC-HGO","annex":"I","regulation":"MARPOL Annex I reg. 43","category":"Heavy grade oil – carriage and use","trigger":{"zone_ids":["Z-ANTARCTIC"]},"applies_to":{"ship_type":["oil_tanker","cargo","passenger","other"]},"logic":"fixed","status":"PROHIBITED","summary":"Carriage in bulk as cargo, use as ballast, or carriage and use as fuel of heavy grade oil is prohibited in the Antarctic area (exceptions for vessels engaged in securing the safety of ships or in SAR).","conditions":[],"fact_level":"REGULATORY FACT (summarised from Annex I reg. 43 – verify wording, including HGO definition thresholds)","sources":["SRC-MARPOL-CONS"]},{"id":"R-AIV-BALTIC-PASSENGER","annex":"IV","regulation":"MARPOL Annex IV reg. 11.3 (MEPC.275(69) phasing)","category":"Sewage – passenger ships","trigger":{"designation":{"kind":"special_area","annex":"IV"}},"applies_to":{"ship_type":["passenger"]},"logic":"annex4_baltic_passenger","summary":"In the Baltic Sea Special Area, discharge of sewage from passenger ships is prohibited unless the ship has an approved sewage treatment plant certified to the special-area standard (MEPC.227(64) section 4.2 – nitrogen and phosphorus removal) and the effluent produces no visible floating solids or discolouration.","conditions":["Approved STP certified to MEPC.227(64) §4.2 special-area standard","No visible floating solids / discolouration of surrounding water"],"fact_level":"REGULATORY FACT (summarised from Annex IV reg. 11.3 – verify wording; phasing dates from Circ.778/Rev.4 footnote 3)","sources":["SRC-MARPOL-CONS","SRC-IMO-CIRC778-R4"]},{"id":"R-AIV-GENERAL","annex":"IV","regulation":"MARPOL Annex IV reg. 11.1","category":"Sewage – general discharge","trigger":{"global":true},"applies_to":{"ship_type":["oil_tanker","cargo","passenger","other"]},"logic":"fixed","status":"RESTRICTED","summary":"Discharge of sewage is prohibited except: (a) comminuted and disinfected sewage using an approved system at ≥ 3 nm from the nearest land, or untreated sewage at ≥ 12 nm, in both cases not instantaneously but at a moderate rate with the ship en route at ≥ 4 knots; or (b) effluent from an approved sewage treatment plant (reg. 9.1.1) with no visible floating solids or discolouration. (Passenger ships in the Baltic special area: see the Annex IV special-area rule.)","conditions":["≥ 3 nm (comminuted & disinfected) or ≥ 12 nm (untreated), en route ≥ 4 kn, moderate rate","or approved STP effluent"],"fact_level":"REGULATORY FACT (summarised from Annex IV reg. 11.1 – verify wording)","sources":["SRC-MARPOL-CONS"]},{"id":"R-AV-EVERYWHERE-PROHIBITED","annex":"V","regulation":"MARPOL Annex V reg. 3","category":"Garbage – prohibited everywhere","trigger":{"global":true},"applies_to":{"ship_type":["oil_tanker","cargo","passenger","other"]},"logic":"fixed","status":"PROHIBITED","summary":"Discharge of all plastics (incl. synthetic ropes, fishing nets, plastic garbage bags, incinerator ashes from plastic products), cooking oil, floating dunnage/lining/packing materials, paper, rags, glass, metal, bottles, crockery and similar refuse is prohibited in all sea areas.","conditions":[],"fact_level":"REGULATORY FACT (summarised from Annex V reg. 3 – verify wording)","sources":["SRC-MARPOL-CONS"]},{"id":"R-AV-SA","annex":"V","regulation":"MARPOL Annex V reg. 6","category":"Garbage – discharge within Special Areas","trigger":{"designation":{"kind":"special_area","annex":"V"}},"applies_to":{"ship_type":["oil_tanker","cargo","passenger","other"]},"logic":"fixed","status":"RESTRICTED","summary":"Within an Annex V Special Area, discharge of all garbage is prohibited except: food wastes, cargo residues not harmful to the marine environment, and cleaning agents/additives in cargo-hold, deck and external-surface washwater – each subject to conditions.","conditions":["Food wastes: as far as practicable from land but ≥ 12 nm from nearest land / nearest ice shelf; comminuted or ground to pass a 25 mm mesh; not contaminated by other garbage; ship en route","Cargo residues (not HME): ≥ 12 nm, ship en route, both departure and next destination ports within the special area, no adequate reception facilities available, washwater without cleaning agents harmful to the marine environment","Antarctic area: discharge of introduced avian products (incl. poultry) not permitted unless treated to be sterile"],"fact_level":"REGULATORY FACT (summarised from Annex V reg. 6 – verify wording, in particular the cargo-residue conditions)","sources":["SRC-MARPOL-CONS","SRC-IMO-CIRC778-R4"]},{"id":"R-AV-SA-NOT-IN-EFFECT","annex":"V","regulation":"MARPOL Annex V reg. 8.2 / Circ.778/Rev.4 footnote 2","category":"Garbage – Special Area designated but not in effect","trigger":{"designation_not_in_effect":{"kind":"special_area","annex":"V"}},"applies_to":{"ship_type":["oil_tanker","cargo","passenger","other"]},"logic":"fixed","status":"INFORMATION","summary":"This area is designated as an Annex V Special Area but the special-area discharge requirements have not yet taken effect (reception-facility notifications outstanding). The general Annex V reg. 4 requirements apply. Company policy may nevertheless require special-area practice.","conditions":[],"fact_level":"REGULATORY FACT (Circ.778/Rev.4 footnote 2)","sources":["SRC-IMO-CIRC778-R4"]},{"id":"R-AI-SA-NOT-IN-EFFECT","annex":"I","regulation":"MARPOL Annex I reg. 38.6 / Circ.778/Rev.4 footnote 2","category":"Oil – Special Area designated but not in effect","trigger":{"designation_not_in_effect":{"kind":"special_area","annex":"I"}},"applies_to":{"ship_type":["oil_tanker","cargo","passenger","other"]},"logic":"fixed","status":"INFORMATION","summary":"This area is designated as an Annex I Special Area but the special-area requirements have not yet taken effect. General Annex I discharge provisions apply.","conditions":[],"fact_level":"REGULATORY FACT (Circ.778/Rev.4 footnote 2)","sources":["SRC-IMO-CIRC778-R4"]},{"id":"R-AV-OUTSIDE","annex":"V","regulation":"MARPOL Annex V reg. 4","category":"Garbage – discharge outside Special Areas","trigger":{"no_designation":{"kind":"special_area","annex":"V"}},"applies_to":{"ship_type":["oil_tanker","cargo","passenger","other"]},"logic":"fixed","status":"RESTRICTED","summary":"Outside Special Areas, discharge of garbage is prohibited except food wastes, cargo residues not harmful to the marine environment, animal carcasses and cleaning agents/additives in washwater – each subject to distance and 'en route' conditions.","conditions":["Food wastes: ≥ 12 nm from nearest land, en route (≥ 3 nm if comminuted/ground ≤ 25 mm)","Cargo residues (not HME) that cannot be recovered: ≥ 12 nm, en route","Animal carcasses: as far from land as possible, en route","Mixed garbage: the most stringent applicable condition applies"],"fact_level":"REGULATORY FACT (summarised from Annex V reg. 4 – verify wording)","sources":["SRC-MARPOL-CONS"]},{"id":"R-AVI-ECA-SOX","annex":"VI","regulation":"MARPOL Annex VI reg. 14.4 (reg. 4 equivalents)","category":"Air – fuel sulphur in ECA","trigger":{"designation":{"kind":"eca","annex":"VI","pollutant":"SOx"}},"applies_to":{"ship_type":["oil_tanker","cargo","passenger","other"]},"logic":"sulphur_limit","limit_pct":0.1,"summary":"Within a SOx Emission Control Area, the sulphur content of fuel oil used on board shall not exceed 0.10% m/m, unless an approved equivalent arrangement (e.g. exhaust gas cleaning system) is used under reg. 4. Written fuel change-over procedure and log entries (reg. 14.6) are required when entering/leaving the ECA.","conditions":["Fuel ≤ 0.10% S m/m, or approved equivalent (reg. 4) – check coastal/port restrictions on open-loop scrubber discharge","Change-over log entries per reg. 14.6"],"fact_level":"REGULATORY FACT (summarised from Annex VI reg. 14.4 – verify wording)","sources":["SRC-MARPOL-CONS","SRC-IMO-CIRC778-R4"]},{"id":"R-AVI-GLOBAL-SOX","annex":"VI","regulation":"MARPOL Annex VI reg. 14.1.3","category":"Air – fuel sulphur outside ECA","trigger":{"no_designation":{"kind":"eca","annex":"VI","pollutant":"SOx"}},"applies_to":{"ship_type":["oil_tanker","cargo","passenger","other"]},"logic":"sulphur_limit","limit_pct":0.5,"summary":"Outside ECAs the sulphur content of fuel oil used on board shall not exceed 0.50% m/m (since 1 January 2020), unless an approved equivalent arrangement is used under reg. 4.","conditions":["Fuel ≤ 0.50% S m/m, or approved equivalent (reg. 4)"],"fact_level":"REGULATORY FACT (summarised – verify wording)","sources":["SRC-MARPOL-CONS"]},{"id":"R-AVI-ECA-NOX","annex":"VI","regulation":"MARPOL Annex VI reg. 13.5","category":"Air – NOx Tier III in NOx ECA","trigger":{"designation":{"kind":"eca","annex":"VI","pollutant":"NOx"}},"applies_to":{"ship_type":["oil_tanker","cargo","passenger","other"]},"logic":"nox_tier3","summary":"Marine diesel engines (> 130 kW) installed on ships constructed on or after the date applicable to this NOx ECA shall comply with Tier III limits when operating in the area (subject to the reg. 13.5 exceptions and Tier II/III switching procedures).","conditions":["Tier III certified engines / operating mode switched to Tier III inside the area","Record the change-over in the engine log/ record book as required"],"fact_level":"REGULATORY FACT (summarised from Annex VI reg. 13.5; construction dates from Circ.778/Rev.4 footnotes 5 and 6 – verify)","sources":["SRC-MARPOL-CONS","SRC-IMO-CIRC778-R4"]},{"id":"R-PSSA","annex":"PSSA","regulation":"MEPC designating resolution; A.982(24)","category":"Particularly Sensitive Sea Area","trigger":{"designation":{"kind":"pssa"}},"applies_to":{"ship_type":["oil_tanker","cargo","passenger","other"]},"logic":"fixed","status":"INFORMATION","summary":"Position is within a PSSA. Associated protective measures (areas to be avoided, routeing, reporting, pilotage, speed) apply – see the designating resolution.","conditions":[],"fact_level":"REGULATORY FACT (Circ.778/Rev.4 Annex 2)","sources":["SRC-IMO-CIRC778-R4","SRC-IMO-A982-24"]},{"id":"R-BWM-D2","annex":"BWM","regulation":"BWM Convention reg. B-3 / D-2 (and B-4 exchange conditions)","category":"Ballast water","trigger":{"global":true},"applies_to":{"ship_type":["oil_tanker","cargo","passenger","other"]},"logic":"fixed","status":"INFORMATION","summary":"Ballast water management to the D-2 performance standard applies to ships subject to the Convention (phase-in complete 8 Sept 2024). Where exchange (D-1) is used as a contingency or permitted, reg. B-4 requires it ≥ 200 nm from nearest land in ≥ 200 m depth (or ≥ 50 nm / 200 m where the former is not possible). Coastal-State supplementary rules (e.g. USCG, Australia) are not yet modelled.","conditions":[],"fact_level":"REGULATORY FACT (summarised – BWM Convention text not in project sources; verify)","sources":["SRC-MARPOL-CONS"]},{"id":"R-AFS","annex":"AFS","regulation":"AFS Convention Annex 1 (organotin; cybutryne per MEPC.331(76))","category":"Anti-fouling systems","trigger":{"global":true},"applies_to":{"ship_type":["oil_tanker","cargo","passenger","other"]},"logic":"fixed","status":"INFORMATION","summary":"Organotin biocides are prohibited in anti-fouling systems. Controls on cybutryne were added by MEPC.331(76): from 1 January 2023 ships shall not apply or re-apply AFS containing cybutryne; existing cybutryne coatings are to be removed or sealed by the next scheduled renewal after that date (no later than 60 months after the last application). PSC may sample/inspect per MEPC.356(78)/357(78); survey and certification per MEPC.358(78).","conditions":["Valid IAFS Certificate / Declaration on AFS","Cybutryne compliance evidenced (AFS Certificate / record)"],"fact_level":"REGULATORY FACT (cybutryne controls referenced in MEPC.356–358(78) in project; effective-date details from MEPC.331(76) – verify)","sources":["SRC-IMO-MEPC356-78","SRC-IMO-MEPC357-78","SRC-IMO-MEPC358-78"]},{"id":"R-EU-ETS","annex":"EU","regulation":"Regulation (EU) 2023/957 amending Reg. (EU) 2015/757 (MRV) – maritime EU ETS","category":"EU ETS / MRV","trigger":{"global":true},"applies_to":{"ship_type":["oil_tanker","cargo","passenger","other"]},"logic":"fixed","status":"NOT_EVALUABLE_BY_POSITION","summary":"EU ETS and MRV obligations are determined by port calls (voyages to, from and between EEA ports and time at berth), ship type and size – not by the vessel's instantaneous position. Evaluation requires voyage/port-call data (Phase 2: Voyage Compliance module).","conditions":[],"fact_level":"REGULATORY FACT (scope structure per Reg. (EU) 2023/957 in project) + SOFTWARE RECOMMENDATION (evaluate at voyage level)","sources":["SRC-EU-2023-957"]}]}
+{
+ "_schema": "bluecompliance.rules.v2",
+ "_version": "2026-09-23",
+ "_provenance": "Annex I/IV/V/VI rules drafted from the well-established MARPOL discharge/emission criteria; wording NOT verified against the consolidated text because the project's MARPOL 2022 copy is unreadable. Verify before operational use.",
+ "_dsl": {
+  "trigger.designation": "fires once per zone containing the position that carries a designation of this kind/annex which is IN EFFECT on the evaluation date",
+  "trigger.designation_not_in_effect": "fires for zones containing the position whose designation of this kind/annex exists but has no in-effect date yet",
+  "trigger.no_designation": "fires when NO zone containing the position has an in-effect designation of this kind/annex (i.e. 'outside special area')",
+  "trigger.zone_ids": "fires for the listed zone ids only",
+  "trigger.global": "always fires (position independent)",
+  "applies_to.ship_type": "list of: oil_tanker | cargo | passenger | other",
+  "applies_to.min_gt / max_gt": "gross tonnage bounds; if the vessel GT is not entered the rule still fires with a note",
+  "logic": "fixed | distance | sulphur_limit | nox_tier3 | annex4_baltic_passenger",
+  "logic.distance": "params.min_nm compared with the screening distance to the nearest coastline: below → PROHIBITED (here), at/above → RESTRICTED (other conditions apply); coastline ≠ baseline",
+  "fact_level": "REGULATORY FACT | INTERPRETATION | SOFTWARE RECOMMENDATION | REQUIRES VERIFICATION"
+ },
+ "rules": [
+  {
+   "id": "R-AI-OUTSIDE-MACHINERY",
+   "annex": "I",
+   "regulation": "MARPOL Annex I reg. 15.2",
+   "category": "Oil – machinery space bilges (ships ≥ 400 GT)",
+   "trigger": {
+    "no_designation": {
+     "kind": "special_area",
+     "annex": "I"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ],
+    "min_gt": 400
+   },
+   "logic": "fixed",
+   "status": "RESTRICTED",
+   "summary": "Outside Annex I Special Areas, discharge of oily bilge water from machinery spaces of a ship ≥ 400 GT is prohibited unless ALL conditions are met.",
+   "conditions": [
+    "Ship is proceeding en route",
+    "Oily mixture is processed through oil filtering equipment meeting reg. 14",
+    "Oil content of the effluent without dilution does not exceed 15 ppm",
+    "Oily mixture does not originate from cargo pump-room bilges (oil tankers)",
+    "Oily mixture is not mixed with oil cargo residues"
+   ],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4"
+   ]
+  },
+  {
+   "id": "R-AI-SA-MACHINERY",
+   "annex": "I",
+   "regulation": "MARPOL Annex I reg. 15.3",
+   "category": "Oil – machinery space bilges (ships ≥ 400 GT)",
+   "trigger": {
+    "designation": {
+     "kind": "special_area",
+     "annex": "I"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ],
+    "min_gt": 400
+   },
+   "logic": "fixed",
+   "status": "RESTRICTED",
+   "summary": "Inside an Annex I Special Area, discharge of oily bilge water from machinery spaces of a ship ≥ 400 GT is prohibited unless ALL conditions are met.",
+   "conditions": [
+    "Ship is proceeding en route",
+    "Oily mixture is processed through oil filtering equipment meeting reg. 14.7 (15 ppm alarm and automatic stopping device)",
+    "Oil content of the effluent without dilution does not exceed 15 ppm",
+    "Oily mixture does not originate from cargo pump-room bilges (oil tankers)",
+    "Oily mixture is not mixed with oil cargo residues"
+   ],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4"
+   ]
+  },
+  {
+   "id": "R-AI-SMALL-SHIP",
+   "annex": "I",
+   "regulation": "MARPOL Annex I reg. 15.6",
+   "category": "Oil – machinery space bilges (ships < 400 GT)",
+   "trigger": {
+    "global": true
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ],
+    "max_gt": 399
+   },
+   "logic": "fixed",
+   "status": "RESTRICTED",
+   "summary": "A ship of less than 400 GT shall retain oil and oily mixtures on board for discharge to reception facilities, or discharge them only if the oil content of the effluent without dilution does not exceed 15 ppm (outside the Antarctic area).",
+   "conditions": [
+    "Oil content of the effluent without dilution does not exceed 15 ppm",
+    "Not applicable in the Antarctic area (reg. 15.4 – any discharge prohibited)"
+   ],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS"
+   ]
+  },
+  {
+   "id": "R-AI-ANTARCTIC-ANY-OIL",
+   "annex": "I",
+   "regulation": "MARPOL Annex I reg. 15.4 and reg. 34.4",
+   "category": "Oil – Antarctic area",
+   "trigger": {
+    "zone_ids": [
+     "Z-ANTARCTIC"
+    ]
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "PROHIBITED",
+   "summary": "In the Antarctic area, any discharge into the sea of oil or oily mixtures from any ship is prohibited.",
+   "conditions": [],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4"
+   ]
+  },
+  {
+   "id": "R-AI-ANTARCTIC-HGO",
+   "annex": "I",
+   "regulation": "MARPOL Annex I reg. 43",
+   "category": "Oil – Antarctic area, heavy grade oil",
+   "trigger": {
+    "zone_ids": [
+     "Z-ANTARCTIC"
+    ]
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "PROHIBITED",
+   "summary": "Carriage in bulk as cargo, use as ballast, or carriage and use as fuel of heavy grade oil (as defined in reg. 43.1) is prohibited in the Antarctic area (ships engaged in securing the safety of ships or in search and rescue excepted).",
+   "conditions": [],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4"
+   ]
+  },
+  {
+   "id": "R-AI-OUTSIDE-TANKER-CARGO",
+   "annex": "I",
+   "regulation": "MARPOL Annex I reg. 34.1",
+   "category": "Oil – cargo area (oil tankers)",
+   "trigger": {
+    "no_designation": {
+     "kind": "special_area",
+     "annex": "I"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker"
+    ]
+   },
+   "logic": "distance",
+   "status": "RESTRICTED",
+   "summary": "Outside Annex I Special Areas, discharge of oil or oily mixtures from the cargo area of an oil tanker is prohibited unless ALL conditions are met.",
+   "conditions": [
+    "Tanker is more than 50 nautical miles from the nearest land",
+    "Tanker is proceeding en route",
+    "Instantaneous rate of discharge of oil does not exceed 30 litres per nautical mile",
+    "Total quantity of oil discharged does not exceed 1/30,000 of the total quantity of the particular cargo of which the residue formed part (1/15,000 for tankers delivered on or before 31 December 1979)",
+    "Tanker has in operation an oil discharge monitoring and control system (ODME) and a slop tank arrangement as required by reg. 29 and 31",
+    "Clean ballast, segregated ballast and reg. 4 exceptions are outside this rule"
+   ],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4"
+   ],
+   "params": {
+    "min_nm": 50
+   }
+  },
+  {
+   "id": "R-AI-SA-TANKER-CARGO",
+   "annex": "I",
+   "regulation": "MARPOL Annex I reg. 34.3",
+   "category": "Oil – cargo area (oil tankers)",
+   "trigger": {
+    "designation": {
+     "kind": "special_area",
+     "annex": "I"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker"
+    ]
+   },
+   "logic": "fixed",
+   "status": "PROHIBITED",
+   "summary": "Inside an Annex I Special Area, any discharge into the sea of oil or oily mixtures from the cargo area of an oil tanker is prohibited (clean/segregated ballast and reg. 4 exceptions excepted).",
+   "conditions": [],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4"
+   ]
+  },
+  {
+   "id": "R-AI-SA-NOT-IN-EFFECT",
+   "annex": "I",
+   "regulation": "MARPOL Annex I reg. 38.6 / Circ.778/Rev.4 footnote 2",
+   "category": "Oil – Special Area status",
+   "trigger": {
+    "designation_not_in_effect": {
+     "kind": "special_area",
+     "annex": "I"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "INFORMATION",
+   "summary": "Position is in an area designated as an Annex I Special Area whose special-area discharge requirements are not yet in effect (reception-facility notification pending); the requirements for areas outside Special Areas apply meanwhile.",
+   "conditions": [],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4"
+   ]
+  },
+  {
+   "id": "R-AI-EXCEPTIONS",
+   "annex": "I",
+   "regulation": "MARPOL Annex I reg. 4",
+   "category": "Oil – exceptions",
+   "trigger": {
+    "global": true
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "INFORMATION",
+   "summary": "Regulations 15 and 34 do not apply to a discharge necessary to secure the safety of a ship or save life at sea, to a discharge resulting from damage to the ship or its equipment (provided all reasonable precautions were taken after the damage), or to an Administration-approved discharge of substances used to combat specific pollution incidents.",
+   "conditions": [
+    "Damage exception does not apply if the owner or master acted with intent to cause damage, or recklessly and with knowledge that damage would probably result"
+   ],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS"
+   ]
+  },
+  {
+   "id": "R-AI-ORB",
+   "annex": "I",
+   "regulation": "MARPOL Annex I reg. 17 (machinery spaces) and reg. 36 (cargo/ballast operations)",
+   "category": "Oil – records",
+   "trigger": {
+    "global": true
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ],
+    "min_gt": 150
+   },
+   "logic": "fixed",
+   "status": "INFORMATION",
+   "summary": "Every oil tanker ≥ 150 GT and every other ship ≥ 400 GT keeps an Oil Record Book Part I; every oil tanker ≥ 150 GT keeps Part II. Every discharge under reg. 15/34, and every emergency, accidental or exceptional discharge, must be recorded without delay.",
+   "conditions": [],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS"
+   ]
+  },
+  {
+   "id": "R-AIV-TREATED-STP",
+   "annex": "IV",
+   "regulation": "MARPOL Annex IV reg. 11.1.2",
+   "category": "Sewage – approved sewage treatment plant",
+   "trigger": {
+    "global": true
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "RESTRICTED",
+   "summary": "Discharge of sewage from a ship with an approved sewage treatment plant (reg. 9.1.1) is permitted at any distance from land provided the plant is certified by the Administration and the effluent does not produce visible floating solids or discoloration of the surrounding water.",
+   "conditions": [
+    "Sewage treatment plant type-approved and certified (reg. 9.1.1); test results laid down in the International Sewage Pollution Prevention Certificate",
+    "Effluent produces no visible floating solids and no discoloration of the surrounding water",
+    "Inside the Baltic Sea Special Area, passenger ships must instead comply with reg. 11.3 (see separate rule)"
+   ],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS"
+   ],
+   "note": "Applies to ships ≥ 400 GT and ships < 400 GT certified to carry more than 15 persons (Annex IV reg. 2)."
+  },
+  {
+   "id": "R-AIV-COMMINUTED",
+   "annex": "IV",
+   "regulation": "MARPOL Annex IV reg. 11.1.1",
+   "category": "Sewage – comminuted and disinfected",
+   "trigger": {
+    "global": true
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "distance",
+   "status": "RESTRICTED",
+   "summary": "Sewage that has been comminuted and disinfected in an approved system (reg. 9.1.2) may be discharged at a distance of more than 3 nautical miles from the nearest land, provided the ship is en route at not less than 4 knots and the discharge rate is moderate.",
+   "conditions": [
+    "Comminuting and disinfecting system approved by the Administration (reg. 9.1.2)",
+    "Distance from the nearest land more than 3 nautical miles",
+    "Ship en route and proceeding at not less than 4 knots",
+    "Rate of discharge approved by the Administration on the basis of the IMO standards (moderate rate)",
+    "Not from a holding tank / not sewage originating from spaces containing living animals unless the same conditions are met"
+   ],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS"
+   ],
+   "params": {
+    "min_nm": 3
+   }
+  },
+  {
+   "id": "R-AIV-UNTREATED",
+   "annex": "IV",
+   "regulation": "MARPOL Annex IV reg. 11.1.1",
+   "category": "Sewage – not comminuted or disinfected (holding tank)",
+   "trigger": {
+    "global": true
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "distance",
+   "status": "RESTRICTED",
+   "summary": "Sewage which is not comminuted or disinfected may be discharged only at a distance of more than 12 nautical miles from the nearest land, while the ship is en route at not less than 4 knots and the sewage stored in holding tanks is discharged at a moderate rate.",
+   "conditions": [
+    "Distance from the nearest land more than 12 nautical miles",
+    "Ship en route and proceeding at not less than 4 knots",
+    "Sewage from holding tanks not discharged instantaneously but at a moderate rate approved by the Administration"
+   ],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS"
+   ],
+   "params": {
+    "min_nm": 12
+   }
+  },
+  {
+   "id": "R-AIV-BALTIC-PASSENGER",
+   "annex": "IV",
+   "regulation": "MARPOL Annex IV reg. 11.3 (MEPC.275(69) phasing)",
+   "category": "Sewage – passenger ships in the Baltic Sea Special Area",
+   "trigger": {
+    "designation": {
+     "kind": "special_area",
+     "annex": "IV"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "passenger"
+    ]
+   },
+   "logic": "annex4_baltic_passenger",
+   "status": null,
+   "summary": "Inside the Baltic Sea Special Area, discharge of sewage from a passenger ship is prohibited unless the ship has an approved sewage treatment plant certified to the special-area standard (MEPC.227(64) section 4.2, nitrogen and phosphorus removal) and the effluent produces no visible floating solids or discoloration.",
+   "conditions": [
+    "Sewage treatment plant meets the nitrogen/phosphorus effluent standard for special areas",
+    "No visible floating solids and no discoloration of the surrounding water",
+    "Applicable dates depend on new/existing ship and the phasing adopted by MEPC.275(69)"
+   ],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4"
+   ]
+  },
+  {
+   "id": "R-AIV-EXCEPTIONS",
+   "annex": "IV",
+   "regulation": "MARPOL Annex IV reg. 3",
+   "category": "Sewage – exceptions",
+   "trigger": {
+    "global": true
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "INFORMATION",
+   "summary": "Regulation 11 does not apply to a discharge necessary for the safety of the ship and persons on board or for saving life at sea, nor to a discharge resulting from damage to the ship or its equipment provided all reasonable precautions were taken before and after the damage.",
+   "conditions": [],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS"
+   ]
+  },
+  {
+   "id": "R-AV-EVERYWHERE-PROHIBITED",
+   "annex": "V",
+   "regulation": "MARPOL Annex V reg. 3",
+   "category": "Garbage – prohibited everywhere",
+   "trigger": {
+    "global": true
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "PROHIBITED",
+   "summary": "Discharge into the sea of all plastics (including synthetic ropes, fishing nets, plastic garbage bags and incinerator ashes from plastic products), cooking oil, floating dunnage/lining/packing materials, paper, rags, glass, metal, bottles, crockery and similar refuse, incinerator ashes, e-waste and fishing gear is prohibited in all sea areas (reg. 4 and 6 permit only food wastes, certain cargo residues, animal carcasses and certain cleaning agents).",
+   "conditions": [
+    "Only the categories expressly permitted by reg. 4 (outside special areas) or reg. 6 (inside special areas) may be discharged, and only under their conditions"
+   ],
+   "fact_level": "REGULATORY FACT – consistent with MARPOL Annex V appendix II Table 1 (GRB form in project); verify against regulation text",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4",
+    "SRC-DOC-GRB-PART1"
+   ]
+  },
+  {
+   "id": "R-AV-OUT-FOOD-COMMINUTED",
+   "annex": "V",
+   "regulation": "MARPOL Annex V reg. 4.1.1",
+   "category": "Garbage – food wastes, comminuted or ground (outside Special Areas)",
+   "trigger": {
+    "no_designation": {
+     "kind": "special_area",
+     "annex": "V"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "distance",
+   "status": "RESTRICTED",
+   "summary": "Outside Annex V Special Areas, comminuted or ground food wastes may be discharged as far as practicable from the nearest land, but not less than 3 nautical miles, while the ship is en route.",
+   "conditions": [
+    "Ship is en route",
+    "Distance from the nearest land not less than 3 nautical miles",
+    "Food wastes passed through a comminuter or grinder capable of passing through a screen with openings no greater than 25 mm",
+    "Food wastes not contaminated with any other garbage type"
+   ],
+   "fact_level": "REGULATORY FACT – consistent with MARPOL Annex V appendix II Table 1 (GRB form in project); verify against regulation text",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4",
+    "SRC-DOC-GRB-PART1"
+   ],
+   "params": {
+    "min_nm": 3
+   }
+  },
+  {
+   "id": "R-AV-OUT-FOOD",
+   "annex": "V",
+   "regulation": "MARPOL Annex V reg. 4.1.1",
+   "category": "Garbage – food wastes, not comminuted (outside Special Areas)",
+   "trigger": {
+    "no_designation": {
+     "kind": "special_area",
+     "annex": "V"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "distance",
+   "status": "RESTRICTED",
+   "summary": "Outside Annex V Special Areas, food wastes that have not been comminuted may be discharged as far as practicable from the nearest land, but not less than 12 nautical miles, while the ship is en route.",
+   "conditions": [
+    "Ship is en route",
+    "Distance from the nearest land not less than 12 nautical miles",
+    "Food wastes not contaminated with any other garbage type"
+   ],
+   "fact_level": "REGULATORY FACT – consistent with MARPOL Annex V appendix II Table 1 (GRB form in project); verify against regulation text",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4",
+    "SRC-DOC-GRB-PART1"
+   ],
+   "params": {
+    "min_nm": 12
+   }
+  },
+  {
+   "id": "R-AV-OUT-CARGO-RESIDUES",
+   "annex": "V",
+   "regulation": "MARPOL Annex V reg. 4.1.3",
+   "category": "Garbage – cargo residues not harmful to the marine environment (outside Special Areas)",
+   "trigger": {
+    "no_designation": {
+     "kind": "special_area",
+     "annex": "V"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "distance",
+   "status": "RESTRICTED",
+   "summary": "Outside Annex V Special Areas, cargo residues that cannot be recovered using commonly available methods for unloading, and that are not classified as harmful to the marine environment (HME), may be discharged as far as practicable from the nearest land but not less than 12 nautical miles while en route.",
+   "conditions": [
+    "Ship is en route",
+    "Distance from the nearest land not less than 12 nautical miles",
+    "Cargo residues (including those in wash water) are not harmful to the marine environment per the shipper's declaration and the criteria in Annex V appendix I",
+    "Residues cannot be recovered using commonly available unloading methods",
+    "Cargo residues not contaminated with cleaning agents that are HME"
+   ],
+   "fact_level": "REGULATORY FACT – consistent with MARPOL Annex V appendix II Table 1 (GRB form in project); verify against regulation text",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4",
+    "SRC-DOC-GRB-PART1"
+   ],
+   "params": {
+    "min_nm": 12
+   }
+  },
+  {
+   "id": "R-AV-OUT-CLEANING-AGENTS",
+   "annex": "V",
+   "regulation": "MARPOL Annex V reg. 4.2",
+   "category": "Garbage – cleaning agents in wash water (outside Special Areas)",
+   "trigger": {
+    "no_designation": {
+     "kind": "special_area",
+     "annex": "V"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "RESTRICTED",
+   "summary": "Outside Annex V Special Areas, cleaning agents or additives contained in cargo hold, deck and external surfaces wash water may be discharged only if they are not harmful to the marine environment (Annex V appendix I criteria).",
+   "conditions": [
+    "Cleaning agent / additive is not HME (check Safety Data Sheet against appendix I)",
+    "Cargo hold wash water containing HME cargo residues must be delivered to a reception facility"
+   ],
+   "fact_level": "REGULATORY FACT – consistent with MARPOL Annex V appendix II Table 1 (GRB form in project); verify against regulation text",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4",
+    "SRC-DOC-GRB-PART1"
+   ]
+  },
+  {
+   "id": "R-AV-OUT-CARCASSES",
+   "annex": "V",
+   "regulation": "MARPOL Annex V reg. 4.1.4",
+   "category": "Garbage – animal carcasses (outside Special Areas)",
+   "trigger": {
+    "no_designation": {
+     "kind": "special_area",
+     "annex": "V"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "distance",
+   "status": "RESTRICTED",
+   "summary": "Outside Annex V Special Areas, animal carcasses (animals carried as cargo that died during the voyage) may be discharged only as far from the nearest land as possible, taking into account the IMO guidelines (2017 Guidelines: more than 100 nautical miles and maximum water depth where possible), while the ship is en route.",
+   "conditions": [
+    "Ship is en route",
+    "As far from the nearest land as possible; MEPC guidelines recommend > 100 nm and maximum water depth",
+    "Carcasses split or otherwise treated to ensure sinking (guidelines)"
+   ],
+   "fact_level": "REGULATORY FACT for reg. 4.1.4; > 100 nm and maximum water depth per appendix II Table 1 / IMO guidelines ('should') – treat the 100 nm as guidance",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4",
+    "SRC-DOC-GRB-PART1"
+   ],
+   "params": {
+    "min_nm": 100
+   }
+  },
+  {
+   "id": "R-AV-SA-FOOD",
+   "annex": "V",
+   "regulation": "MARPOL Annex V reg. 6.1.1",
+   "category": "Garbage – food wastes (inside Special Areas)",
+   "trigger": {
+    "designation": {
+     "kind": "special_area",
+     "annex": "V"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "distance",
+   "status": "RESTRICTED",
+   "summary": "Inside an Annex V Special Area, food wastes may be discharged only as far as practicable from the nearest land but not less than 12 nautical miles, only after being comminuted or ground (≤ 25 mm screen), while the ship is en route.",
+   "conditions": [
+    "Ship is en route",
+    "Distance from the nearest land not less than 12 nautical miles",
+    "Food wastes comminuted or ground so as to pass through a screen with openings no greater than 25 mm",
+    "Food wastes not contaminated with any other garbage type",
+    "Antarctic area: introduction of avian products (including poultry and poultry parts) is not permitted unless made sterile (reg. 6.1.1 – verify)"
+   ],
+   "fact_level": "REGULATORY FACT – consistent with MARPOL Annex V appendix II Table 1 (GRB form in project); verify against regulation text",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4",
+    "SRC-DOC-GRB-PART1"
+   ],
+   "params": {
+    "min_nm": 12
+   }
+  },
+  {
+   "id": "R-AV-SA-CARGO-RESIDUES",
+   "annex": "V",
+   "regulation": "MARPOL Annex V reg. 6.1.2",
+   "category": "Garbage – cargo residues / hold wash water (inside Special Areas)",
+   "trigger": {
+    "designation": {
+     "kind": "special_area",
+     "annex": "V"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "distance",
+   "status": "RESTRICTED",
+   "summary": "Inside an Annex V Special Area, cargo residues and cleaning agents contained in cargo hold wash water may be discharged only if ALL conditions are met; dry cargo residues not in wash water may not be discharged.",
+   "conditions": [
+    "Cargo residues, cleaning agents or additives in hold wash water are not harmful to the marine environment (appendix I)",
+    "Both the port of departure and the next port of destination are within the Special Area and the ship will not transit outside the Special Area between them",
+    "No adequate reception facilities are available at those ports (taking into account IMO guidelines)",
+    "Ship is en route and as far as practicable from the nearest land, but not less than 12 nautical miles",
+    "Cargo residues are not mixed with any other garbage"
+   ],
+   "fact_level": "REGULATORY FACT – consistent with MARPOL Annex V appendix II Table 1 (GRB form in project); verify against regulation text",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4",
+    "SRC-DOC-GRB-PART1"
+   ],
+   "params": {
+    "min_nm": 12
+   }
+  },
+  {
+   "id": "R-AV-SA-DECK-WASH",
+   "annex": "V",
+   "regulation": "MARPOL Annex V reg. 6.2",
+   "category": "Garbage – cleaning agents in deck / external surface wash water (inside Special Areas)",
+   "trigger": {
+    "designation": {
+     "kind": "special_area",
+     "annex": "V"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "RESTRICTED",
+   "summary": "Inside an Annex V Special Area, cleaning agents or additives contained in deck and external surfaces wash water may be discharged only if they are not harmful to the marine environment.",
+   "conditions": [
+    "Cleaning agent / additive is not HME (appendix I criteria)"
+   ],
+   "fact_level": "REGULATORY FACT – consistent with MARPOL Annex V appendix II Table 1 (GRB form in project); verify against regulation text",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4",
+    "SRC-DOC-GRB-PART1"
+   ]
+  },
+  {
+   "id": "R-AV-SA-CARCASSES",
+   "annex": "V",
+   "regulation": "MARPOL Annex V reg. 6.1",
+   "category": "Garbage – animal carcasses (inside Special Areas)",
+   "trigger": {
+    "designation": {
+     "kind": "special_area",
+     "annex": "V"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "PROHIBITED",
+   "summary": "Inside an Annex V Special Area, discharge of animal carcasses is not among the categories permitted by reg. 6 and is therefore prohibited.",
+   "conditions": [],
+   "fact_level": "REGULATORY FACT – Annex V appendix II Table 1 lists animal carcasses as 'Discharge prohibited' within special areas; verify against reg. 6",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4",
+    "SRC-DOC-GRB-PART1"
+   ]
+  },
+  {
+   "id": "R-AV-SA-NOT-IN-EFFECT",
+   "annex": "V",
+   "regulation": "MARPOL Annex V reg. 8.2 / Circ.778/Rev.4 footnote 2",
+   "category": "Garbage – Special Area status",
+   "trigger": {
+    "designation_not_in_effect": {
+     "kind": "special_area",
+     "annex": "V"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "INFORMATION",
+   "summary": "Position is in an area designated as an Annex V Special Area whose special-area requirements are not yet in effect (reception-facility notification pending); reg. 4 (outside special areas) applies meanwhile.",
+   "conditions": [],
+   "fact_level": "REGULATORY FACT – consistent with MARPOL Annex V appendix II Table 1 (GRB form in project); verify against regulation text",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4",
+    "SRC-DOC-GRB-PART1"
+   ]
+  },
+  {
+   "id": "R-AV-EXCEPTIONS",
+   "annex": "V",
+   "regulation": "MARPOL Annex V reg. 7",
+   "category": "Garbage – exceptions",
+   "trigger": {
+    "global": true
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "INFORMATION",
+   "summary": "Regulations 3, 4, 5 and 6 do not apply to discharges necessary for the safety of a ship and those on board or saving life at sea, to accidental loss resulting from damage to a ship or its equipment (all reasonable precautions taken), or to accidental loss of fishing gear / discharge of fishing gear for the protection of the marine environment or safety.",
+   "conditions": [],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS"
+   ]
+  },
+  {
+   "id": "R-AV-RECORDS",
+   "annex": "V",
+   "regulation": "MARPOL Annex V reg. 10",
+   "category": "Garbage – placards, management plan, record book",
+   "trigger": {
+    "global": true
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "INFORMATION",
+   "summary": "Every ship ≥ 12 m in length displays placards on discharge requirements; every ship ≥ 100 GT and every ship certified to carry ≥ 15 persons carries a garbage management plan; every ship ≥ 400 GT and every ship certified to carry ≥ 15 persons engaged in international voyages keeps a Garbage Record Book (Part I; Part II for solid bulk cargo residues) in which every discharge into the sea, to reception facilities, incineration and accidental loss is recorded.",
+   "conditions": [],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS"
+   ]
+  },
+  {
+   "id": "R-AVI-GLOBAL-SOX",
+   "annex": "VI",
+   "regulation": "MARPOL Annex VI reg. 14.1.3",
+   "category": "Air – fuel oil sulphur (outside ECAs)",
+   "trigger": {
+    "no_designation": {
+     "kind": "eca",
+     "annex": "VI",
+     "pollutant": "SOx"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "sulphur_limit",
+   "status": null,
+   "summary": "Outside SOx emission control areas the sulphur content of fuel oil used or carried for use on board shall not exceed 0.50% m/m (from 1 January 2020).",
+   "conditions": [
+    "Alternative: an approved equivalent arrangement (exhaust gas cleaning system) under reg. 4"
+   ],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4"
+   ],
+   "params": {
+    "limit_pct": 0.5
+   },
+   "limit_pct": 0.5
+  },
+  {
+   "id": "R-AVI-ECA-SOX",
+   "annex": "VI",
+   "regulation": "MARPOL Annex VI reg. 14.4 (reg. 4 equivalents)",
+   "category": "Air – fuel oil sulphur (inside SOx ECAs)",
+   "trigger": {
+    "designation": {
+     "kind": "eca",
+     "annex": "VI",
+     "pollutant": "SOx"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "sulphur_limit",
+   "status": null,
+   "summary": "Inside a SOx emission control area the sulphur content of fuel oil used on board shall not exceed 0.10% m/m (from 1 January 2015; later for ECAs designated afterwards – see zone in_effect_from).",
+   "conditions": [
+    "Alternative: an approved equivalent arrangement (EGCS) under reg. 4; washwater discharge may be restricted by coastal/port authorities"
+   ],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4"
+   ],
+   "params": {
+    "limit_pct": 0.1
+   },
+   "limit_pct": 0.1
+  },
+  {
+   "id": "R-AVI-CARRIAGE-BAN",
+   "annex": "VI",
+   "regulation": "MARPOL Annex VI reg. 14.1 (MEPC.305(73) carriage ban)",
+   "category": "Air – carriage of non-compliant fuel",
+   "trigger": {
+    "global": true
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "INFORMATION",
+   "summary": "From 1 March 2020, fuel oil with a sulphur content exceeding 0.50% m/m may not be carried for use on board unless the ship operates an approved equivalent (EGCS) under reg. 4; carriage as cargo is not affected.",
+   "conditions": [],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4"
+   ]
+  },
+  {
+   "id": "R-AVI-ECA-CHANGEOVER",
+   "annex": "VI",
+   "regulation": "MARPOL Annex VI reg. 14.6",
+   "category": "Air – fuel change-over records (SOx ECAs)",
+   "trigger": {
+    "designation": {
+     "kind": "eca",
+     "annex": "VI",
+     "pollutant": "SOx"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "RESTRICTED",
+   "summary": "Ships using separate fuel oils to comply inside a SOx ECA shall carry a written change-over procedure and record in a log book the volume of low-sulphur fuel in each tank and the date, time and position of the ship when each change-over is completed before entry and started after exit.",
+   "conditions": [
+    "Written fuel change-over procedure on board",
+    "Tank volumes, date, time and position logged at completion of change-over before entering the ECA",
+    "Same recorded when change-over commences after leaving the ECA"
+   ],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4"
+   ]
+  },
+  {
+   "id": "R-AVI-ECA-NOX",
+   "annex": "VI",
+   "regulation": "MARPOL Annex VI reg. 13.5",
+   "category": "Air – NOx Tier III (inside NOx ECAs)",
+   "trigger": {
+    "designation": {
+     "kind": "eca",
+     "annex": "VI",
+     "pollutant": "NOx"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "nox_tier3",
+   "status": null,
+   "summary": "Marine diesel engines (> 130 kW) installed on ships constructed on or after the ECA-specific Tier III date operating in a NOx emission control area shall meet Tier III NOx limits (reg. 13.5.1); other ships meet the tier applicable to their construction date.",
+   "conditions": [
+    "Tier III date is ECA-specific: North American and US Caribbean Sea ECAs – ships constructed on/after 1 January 2016; Baltic Sea and North Sea ECAs – on/after 1 January 2021 (zone data)",
+    "Engine replacements and major conversions may trigger Tier III (reg. 13.2)"
+   ],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS",
+    "SRC-IMO-CIRC778-R4"
+   ]
+  },
+  {
+   "id": "R-AVI-BDN",
+   "annex": "VI",
+   "regulation": "MARPOL Annex VI reg. 18",
+   "category": "Air – fuel oil quality, bunker delivery notes and samples",
+   "trigger": {
+    "global": true
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ],
+    "min_gt": 400
+   },
+   "logic": "fixed",
+   "status": "INFORMATION",
+   "summary": "Fuel oil for combustion purposes shall meet reg. 18.3 quality requirements; every ship ≥ 400 GT keeps bunker delivery notes on board for three years and the MARPOL delivered sample for at least 12 months.",
+   "conditions": [],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS"
+   ]
+  },
+  {
+   "id": "R-AVI-INCINERATION",
+   "annex": "VI",
+   "regulation": "MARPOL Annex VI reg. 16",
+   "category": "Air – shipboard incineration",
+   "trigger": {
+    "global": true
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "INFORMATION",
+   "summary": "Shipboard incineration of Annex I, II or III cargo residues and related contaminated packing materials, PCBs, garbage containing more than traces of heavy metals, refined petroleum products containing halogen compounds, sewage sludge and sludge oil not generated on board, and exhaust gas cleaning system residues is prohibited; incineration of sewage sludge and sludge oil in a main or auxiliary power plant or boiler is prohibited inside ports, harbours and estuaries; incineration of PVCs is prohibited except in type-approved incinerators.",
+   "conditions": [],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS"
+   ],
+   "note": "\"Inside ports, harbours and estuaries\" is not evaluated by position in Phase 2 (no port polygons yet)."
+  },
+  {
+   "id": "R-AVI-VOC",
+   "annex": "VI",
+   "regulation": "MARPOL Annex VI reg. 15",
+   "category": "Air – volatile organic compounds (tankers)",
+   "trigger": {
+    "global": true
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker"
+    ]
+   },
+   "logic": "fixed",
+   "status": "INFORMATION",
+   "summary": "In ports or terminals designated by a Party for VOC regulation, a tanker subject to vapour emission control shall be provided with an approved vapour collection system; every tanker carrying crude oil shall implement a VOC management plan.",
+   "conditions": [],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS"
+   ]
+  },
+  {
+   "id": "R-AVI-EEXI-CII",
+   "annex": "VI",
+   "regulation": "MARPOL Annex VI chapter 4 (reg. 23, 25, 26, 28 – EEXI, SEEMP Part III, CII)",
+   "category": "Air – energy efficiency (ships ≥ 400 GT / ≥ 5,000 GT)",
+   "trigger": {
+    "global": true
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ],
+    "min_gt": 400
+   },
+   "logic": "fixed",
+   "status": "INFORMATION",
+   "summary": "Ships ≥ 400 GT engaged in international voyages hold an IEE Certificate with attained EEXI; ships ≥ 5,000 GT of the covered types report annual fuel consumption (DCS) and, from 2023, are rated A–E under the CII framework with a corrective action plan required for D (three years) or E (one year).",
+   "conditions": [],
+   "fact_level": "REGULATORY FACT – verify wording against MARPOL Consolidated 2022 (project copy unreadable)",
+   "sources": [
+    "SRC-MARPOL-CONS"
+   ]
+  },
+  {
+   "id": "R-PSSA",
+   "annex": "PSSA",
+   "regulation": "MEPC designating resolution; A.982(24)",
+   "category": "Particularly Sensitive Sea Area",
+   "trigger": {
+    "designation": {
+     "kind": "pssa"
+    }
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "INFORMATION",
+   "summary": "Position is inside a PSSA. PSSAs have no discharge rules of their own; compliance is with the associated protective measures (APMs) adopted for the area – areas to be avoided, routeing measures, mandatory reporting, discharge restrictions – listed in the designating resolution.",
+   "conditions": [
+    "Check the APMs recorded for this PSSA in the zone registry"
+   ],
+   "fact_level": "REGULATORY FACT (A.982(24) framework)",
+   "sources": [
+    "SRC-IMO-A982-24",
+    "SRC-IMO-CIRC778-R4"
+   ]
+  },
+  {
+   "id": "R-BWM-D2",
+   "annex": "BWM",
+   "regulation": "BWM Convention reg. B-3 / D-2 (and B-4 exchange conditions)",
+   "category": "Ballast water management",
+   "trigger": {
+    "global": true
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "INFORMATION",
+   "summary": "Ships subject to the BWM Convention manage ballast water to the D-2 standard (all ships from 8 September 2024); where exchange (D-1) is still permitted it is conducted ≥ 200 nm from land in ≥ 200 m depth, or ≥ 50 nm / 200 m where the former is not possible, or in designated areas.",
+   "conditions": [
+    "Ballast Water Management Plan and Ballast Water Record Book on board",
+    "Coastal states (e.g. USA, Australia, New Zealand) impose additional or stricter requirements – verify per port"
+   ],
+   "fact_level": "REGULATORY FACT (BWM Convention – official text not in project knowledge base; verify)",
+   "sources": [
+    "SRC-MARPOL-CONS"
+   ]
+  },
+  {
+   "id": "R-AFS",
+   "annex": "AFS",
+   "regulation": "AFS Convention Annex 1 (organotin; cybutryne per MEPC.331(76))",
+   "category": "Anti-fouling systems",
+   "trigger": {
+    "global": true
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "INFORMATION",
+   "summary": "Ships shall not apply or bear organotin compounds acting as biocides in anti-fouling systems; from 1 January 2023 cybutryne shall not be applied or re-applied, and existing cybutryne coatings shall be removed or sealed at the next scheduled renewal after that date (but no later than 60 months after last application).",
+   "conditions": [
+    "International Anti-fouling System Certificate (ships ≥ 400 GT) or Declaration (≥ 24 m, < 400 GT)"
+   ],
+   "fact_level": "REGULATORY FACT (per MEPC.356–358(78) guidelines in project; convention text not in project – verify)",
+   "sources": [
+    "SRC-IMO-MEPC356-78",
+    "SRC-IMO-MEPC357-78",
+    "SRC-IMO-MEPC358-78"
+   ]
+  },
+  {
+   "id": "R-EU-ETS",
+   "annex": "EU",
+   "regulation": "Regulation (EU) 2023/957 amending Reg. (EU) 2015/757 (MRV) – maritime EU ETS",
+   "category": "EU – emissions trading / MRV",
+   "trigger": {
+    "global": true
+   },
+   "applies_to": {
+    "ship_type": [
+     "oil_tanker",
+     "cargo",
+     "passenger",
+     "other"
+    ]
+   },
+   "logic": "fixed",
+   "status": "NOT_EVALUABLE_BY_POSITION",
+   "summary": "EU ETS and MRV obligations are determined by voyage (port of call pairs, ship size ≥ 5,000 GT, ship type) and reporting period, not by geographical position; they are evaluated in the Voyage Compliance module.",
+   "conditions": [],
+   "fact_level": "REGULATORY FACT (scope); voyage logic not implemented in Phase 2",
+   "sources": [
+    "SRC-EU-2023-957"
+   ]
+  }
+ ]
+}

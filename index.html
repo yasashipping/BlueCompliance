@@ -456,10 +456,12 @@ async function evaluate({ lat, lon, date, vessel }) {
   const des = [];   // {zone, d, inEffect}
   for (const z of hits) for (const d of z.designations) des.push({ zone: z, d, inEffect: !!d.in_effect_from && dateLE(d.in_effect_from, date) });
   const matchDes = (q, x) => x.d.kind === q.kind && (!q.annex || x.d.annex === q.annex) && (!q.pollutant || (x.d.pollutants || []).includes(q.pollutant));
-  const results = [];
+  const results = []; CUR_COAST_NM = coastNm;
   const vtype = vessel.type;
   for (const r of RULES) {
     if (r.applies_to && r.applies_to.ship_type && !r.applies_to.ship_type.includes(vtype)) continue;
+    const gt = vessel.gt != null && !isNaN(vessel.gt) ? Number(vessel.gt) : null;
+    if (r.applies_to && gt != null && ((r.applies_to.min_gt != null && gt < r.applies_to.min_gt) || (r.applies_to.max_gt != null && gt > r.applies_to.max_gt))) continue;
     const t = r.trigger; const emit = (zone, d, extra) => results.push(buildResult(r, zone, d, vessel, date, extra));
     if (t.global) emit(null, null);
     else if (t.zone_ids) hits.filter(z => t.zone_ids.includes(z.id)).forEach(z => emit(z, null));
@@ -473,12 +475,20 @@ async function evaluate({ lat, lon, date, vessel }) {
   results.sort((a, b) => (ax[a.annex] - ax[b.annex]) || (sev[a.status] - sev[b.status]));
   return { evaluated_at: new Date().toISOString(), dataset_version: DATASET_VERSION, position: { lat, lon }, evaluation_date: date, vessel, nearest_coast_nm: coastNm, zones: hits.map(z => ({ id: z.id, name: z.name, geometry_status: z.geometry_status })), results };
 }
+let CUR_COAST_NM = null;
 function buildResult(r, zone, d, vessel, date, extra) {
-  let status = r.status || 'INFORMATION', reasoning = '', note = '';
+  let status = r.status || 'INFORMATION', reasoning = '', note = r.note || '';
+  const gtNote = r.applies_to && (r.applies_to.min_gt != null || r.applies_to.max_gt != null) && (vessel.gt == null || isNaN(vessel.gt)) ? ` GT not entered – rule applies to ships${r.applies_to.min_gt != null ? ' ≥ ' + r.applies_to.min_gt + ' GT' : ''}${r.applies_to.max_gt != null ? ' ≤ ' + r.applies_to.max_gt + ' GT' : ''}.` : '';
   const zoneTxt = zone ? `position inside ${zone.name} (${zone.id}, geometry ${zone.geometry_status})` : 'position independent';
   if (r.logic === 'fixed') {
     reasoning = zone && d ? `${zoneTxt}; ${d.kind === 'eca' ? 'ECA' : 'Annex ' + d.annex + ' Special Area'} in effect from ${d.in_effect_from} ≤ evaluation date ${date}` : zone ? zoneTxt : (r.trigger.no_designation ? `no in-effect ${r.trigger.no_designation.kind.replace('_', ' ')}${r.trigger.no_designation.annex ? ' Annex ' + r.trigger.no_designation.annex : ''} designation contains the position` : zoneTxt);
     if (r.trigger.designation_not_in_effect && d) reasoning = `${zoneTxt}; designation exists (adopted ${d.adopted}) but in_effect_from is ${d.in_effect_from || 'not yet set'}`;
+  } else if (r.logic === 'distance') {
+    const min = (r.params || {}).min_nm, c = CUR_COAST_NM; const ctx = zone && d ? `${zoneTxt}; Annex ${d.annex} Special Area in effect from ${d.in_effect_from}` : zoneTxt;
+    if (c == null) { status = 'UNKNOWN'; reasoning = `${ctx}; nearest-coast distance unavailable (minimum ${min} nm required)`; }
+    else if (c < min) { status = 'PROHIBITED'; reasoning = `${ctx}; nearest coast ≈ ${c.toFixed(1)} nm < ${min} nm minimum → not permitted at this position`; }
+    else { status = 'RESTRICTED'; reasoning = `${ctx}; nearest coast ≈ ${c.toFixed(1)} nm ≥ ${min} nm minimum → permitted only if the remaining conditions are met`; }
+    note = (note ? note + ' ' : '') + 'Distance is measured to the Natural Earth coastline as a screening proxy; MARPOL measures "from the nearest land" from the baseline (and by special definition off NE Australia) – INTERPRETATION.';
   } else if (r.logic === 'sulphur_limit') {
     const s = vessel.fuel_sulphur; const lim = r.limit_pct;
     if (vessel.egcs !== 'no') { status = 'EQUIVALENT_VERIFY'; reasoning = `${zoneTxt}; limit ${lim}% S; vessel reports ${vessel.egcs}-loop EGCS – equivalence under reg. 4 must be approved by the Administration and any coastal/port washwater discharge restriction checked`; }
@@ -499,6 +509,7 @@ function buildResult(r, zone, d, vessel, date, extra) {
     else { status = 'INFORMATION'; reasoning = `${zoneTxt}; special-area requirement not yet in effect for this ship category on ${date}`; }
     note = 'New vs existing passenger ship determined here by construction date ≥ 2019-06-01 (interpretation – verify against MEPC.275(69) definitions).';
   }
+  note = (note + gtNote).trim();
   return { rule_id: r.id, annex: r.annex, category: r.category, regulation: r.regulation, title: r.summary.split('.')[0] + '.', summary: r.summary, conditions: r.conditions || [], status, reasoning, note, zone: zone ? { id: zone.id, name: zone.name, geometry_status: zone.geometry_status, boundary_definition: zone.boundary_definition } : null, designation: d ? { kind: d.kind, annex: d.annex, pollutants: d.pollutants || null, in_effect_from: d.in_effect_from, adopted: d.adopted, source: d.source } : null, fact_level: r.fact_level, sources: r.sources.map(id => ({ id, title: SRC[id] ? SRC[id].title : id, authority: SRC[id] ? SRC[id].authority : '?', in_project: SRC[id] ? SRC[id].in_project : false })) };
 }
 

@@ -1,0 +1,965 @@
+{
+ "_schema": "bluecompliance.rb_templates.v1",
+ "_version": "2026-09-23",
+ "templates": [
+  {
+   "id": "GRB_V2020",
+   "book": "GRB",
+   "title": "Garbage Record Book (Part I all ships / Part II solid bulk cargo residues)",
+   "effective_from": "2020-10-01",
+   "effective_to": null,
+   "regulation_basis": "MARPOL Annex V regulation 10 and appendix II (form of Garbage Record Book) as amended by MEPC.314(74)",
+   "source_ids": [
+    "SRC-DOC-GRB-PART1",
+    "SRC-DOC-GRB-DOMINICA"
+   ],
+   "verification_note": "Transcribed from a shipowner GRB Part I form reproducing appendix II; verify against MARPOL Annex V appendix II (MEPC.314(74)). Polar Code chapter 5 part II-A references retained.",
+   "fields": {
+    "header": [
+     "ship_name",
+     "distinctive_number",
+     "imo_number",
+     "period_from",
+     "period_to"
+    ],
+    "entry": [
+     "date_time",
+     "position_or_port",
+     "category",
+     "amount_m3",
+     "method",
+     "officer_signature",
+     "remarks"
+    ]
+   },
+   "categories": {
+    "part_I": {
+     "A": "Plastics",
+     "B": "Food wastes",
+     "C": "Domestic wastes",
+     "D": "Cooking oil",
+     "E": "Incinerator ashes",
+     "F": "Operational wastes",
+     "G": "Animal carcasses",
+     "H": "Fishing gear",
+     "I": "E-waste"
+    },
+    "part_II": {
+     "J": "Cargo residues (non-HME)",
+     "K": "Cargo residues (HME)"
+    }
+   },
+   "operation_codes": [
+    {
+     "code": "4.1.1",
+     "title": "Discharge to a reception facility ashore or to other ships",
+     "items": [
+      {
+       "no": ".1",
+       "text": "Date and time of discharge",
+       "field": "date_time"
+      },
+      {
+       "no": ".2",
+       "text": "Port or facility, or name of ship",
+       "field": "port_or_facility"
+      },
+      {
+       "no": ".3",
+       "text": "Categories of garbage discharged",
+       "field": "categories"
+      },
+      {
+       "no": ".4",
+       "text": "Estimated amount discharged for each category in cubic metres",
+       "field": "amount_m3_by_category"
+      },
+      {
+       "no": ".5",
+       "text": "Signature of officer in charge of the operation",
+       "field": "officer_signature"
+      }
+     ],
+     "regulatory_check": "none",
+     "external_check": "reception_receipt"
+    },
+    {
+     "code": "4.1.2",
+     "title": "Incineration",
+     "items": [
+      {
+       "no": ".1",
+       "text": "Date and time of start and stop of incineration",
+       "field": "date_time_start_stop"
+      },
+      {
+       "no": ".2",
+       "text": "Position of the ship (latitude and longitude) at the start and stop of incineration",
+       "field": "position_start_stop"
+      },
+      {
+       "no": ".3",
+       "text": "Categories of garbage incinerated",
+       "field": "categories"
+      },
+      {
+       "no": ".4",
+       "text": "Estimated amount incinerated in cubic metres",
+       "field": "amount_m3"
+      },
+      {
+       "no": ".5",
+       "text": "Signature of the officer in charge of the operation",
+       "field": "officer_signature"
+      }
+     ],
+     "regulatory_check": [
+      "R-AVI-INCINERATION"
+     ],
+     "note": "Incineration of certain categories is prohibited by Annex VI reg. 16; 'in ports, harbours and estuaries' needs port polygons."
+    },
+    {
+     "code": "4.1.3",
+     "title": "Discharge into the sea (regulations 4, 5 or 6 / Polar Code part II-A ch. 5)",
+     "items": [
+      {
+       "no": ".1",
+       "text": "Date and time of discharge",
+       "field": "date_time"
+      },
+      {
+       "no": ".2",
+       "text": "Position of the ship (latitude and longitude); for cargo residue discharges, start and stop positions",
+       "field": "position"
+      },
+      {
+       "no": ".3",
+       "text": "Category of garbage discharged",
+       "field": "category"
+      },
+      {
+       "no": ".4",
+       "text": "Estimated amount discharged for each category in cubic metres",
+       "field": "amount_m3"
+      },
+      {
+       "no": ".5",
+       "text": "Signature of the officer in charge of the operation",
+       "field": "officer_signature"
+      }
+     ],
+     "regulatory_check": {
+      "B": [
+       "R-AV-OUT-FOOD-COMMINUTED",
+       "R-AV-OUT-FOOD",
+       "R-AV-SA-FOOD"
+      ],
+      "G": [
+       "R-AV-OUT-CARCASSES",
+       "R-AV-SA-CARCASSES"
+      ],
+      "J": [
+       "R-AV-OUT-CARGO-RESIDUES",
+       "R-AV-SA-CARGO-RESIDUES"
+      ],
+      "K": [
+       "R-AV-EVERYWHERE-PROHIBITED"
+      ],
+      "A": [
+       "R-AV-EVERYWHERE-PROHIBITED"
+      ],
+      "C": [
+       "R-AV-EVERYWHERE-PROHIBITED"
+      ],
+      "D": [
+       "R-AV-EVERYWHERE-PROHIBITED"
+      ],
+      "E": [
+       "R-AV-EVERYWHERE-PROHIBITED"
+      ],
+      "F": [
+       "R-AV-EVERYWHERE-PROHIBITED"
+      ],
+      "H": [
+       "R-AV-EVERYWHERE-PROHIBITED"
+      ],
+      "I": [
+       "R-AV-EVERYWHERE-PROHIBITED"
+      ]
+     }
+    },
+    {
+     "code": "4.1.4",
+     "title": "Accidental or other exceptional discharge or loss into the sea (regulation 7)",
+     "items": [
+      {
+       "no": ".1",
+       "text": "Date and time of occurrence",
+       "field": "date_time"
+      },
+      {
+       "no": ".2",
+       "text": "Port or position of the ship at time of occurrence (latitude, longitude and water depth if known)",
+       "field": "position"
+      },
+      {
+       "no": ".3",
+       "text": "Categories of garbage discharged or lost",
+       "field": "categories"
+      },
+      {
+       "no": ".4",
+       "text": "Estimated amount for each category in cubic metres",
+       "field": "amount_m3_by_category"
+      },
+      {
+       "no": ".5",
+       "text": "The reason for the discharge or loss and general remarks",
+       "field": "reason_remarks"
+      }
+     ],
+     "regulatory_check": [
+      "R-AV-EXCEPTIONS"
+     ],
+     "note": "Reason text is mandatory; missing reason → form warning."
+    }
+   ],
+   "mandatory_fields": {
+    "4.1.1": [
+     "date_time",
+     "port_or_facility",
+     "categories",
+     "amount_m3_by_category",
+     "officer_signature"
+    ],
+    "4.1.2": [
+     "date_time_start_stop",
+     "position_start_stop",
+     "categories",
+     "amount_m3",
+     "officer_signature"
+    ],
+    "4.1.3": [
+     "date_time",
+     "position",
+     "category",
+     "amount_m3",
+     "officer_signature"
+    ],
+    "4.1.4": [
+     "date_time",
+     "position",
+     "categories",
+     "amount_m3_by_category",
+     "reason_remarks"
+    ]
+   },
+   "summary_table_1": "Appendix II Table 1 (summary): outside SA – food waste comminuted ≥3 nm en route, not comminuted ≥12 nm; cargo residues (non-HME) ≥12 nm en route; cleaning agents permitted if non-HME; carcasses en route as far as possible (>100 nm, max depth); all other garbage prohibited. Inside SA/Arctic – food waste comminuted ≥12 nm en route, not comminuted prohibited; cargo residues only in washwater ≥12 nm subject to reg. 6.1.2; deck washwater cleaning agents permitted; carcasses prohibited. Mixed garbage → more stringent requirement. Avian products in Antarctic not permitted unless sterile.",
+   "validation_rules": {
+    "max_amount_m3_per_entry": 50,
+    "position_required_for": [
+     "4.1.2",
+     "4.1.3",
+     "4.1.4"
+    ],
+    "retention_years": 2,
+    "_note": "COMPANY POLICY thresholds – set by HSQE"
+   }
+  },
+  {
+   "id": "ORB1_V2019",
+   "book": "ORB1",
+   "title": "Oil Record Book Part I – Machinery space operations (all ships)",
+   "effective_from": "2019-01-01",
+   "effective_to": null,
+   "regulation_basis": "MARPOL Annex I regulation 17 and appendix III (form of Oil Record Book), list of items to be recorded, 2019 format",
+   "source_ids": [
+    "SRC-DOC-ORB1-NOVOMAR"
+   ],
+   "verification_note": "Transcribed from Novomar ORB-I-EN-2019 which reproduces appendix III Part I; verify against MARPOL Annex I appendix III and MEPC.1/Circ.736/Rev.2 (guidance for recording).",
+   "fields": {
+    "header": [
+     "ship_name",
+     "distinctive_number",
+     "imo_number",
+     "gross_tonnage",
+     "period_from",
+     "period_to"
+    ],
+    "entry": [
+     "date",
+     "code",
+     "item",
+     "record_of_operations",
+     "officer_signature"
+    ]
+   },
+   "operation_codes": [
+    {
+     "code": "A",
+     "title": "Ballasting or cleaning of oil fuel tanks",
+     "items": [
+      {
+       "no": "1",
+       "text": "Identity of tank(s) ballasted"
+      },
+      {
+       "no": "2",
+       "text": "Whether cleaned since they last contained oil and, if not, type of oil previously carried"
+      },
+      {
+       "no": "3.1",
+       "text": "Cleaning: position of ship and time at start and completion of cleaning"
+      },
+      {
+       "no": "3.2",
+       "text": "Cleaning: tank(s) and method (rinsing through, steaming, chemicals; type and quantity of chemicals)"
+      },
+      {
+       "no": "3.3",
+       "text": "Cleaning: tank(s) into which cleaning water was transferred and quantity"
+      },
+      {
+       "no": "4.1",
+       "text": "Ballasting: position of ship and time at start and end of ballasting"
+      },
+      {
+       "no": "4.2",
+       "text": "Ballasting: quantity of ballast if tanks are not cleaned"
+      }
+     ]
+    },
+    {
+     "code": "B",
+     "title": "Discharge of dirty ballast or cleaning water from oil fuel tanks referred to under section (A)",
+     "items": [
+      {
+       "no": "5",
+       "text": "Identity of tank(s)"
+      },
+      {
+       "no": "6",
+       "text": "Position of ship at start of discharge"
+      },
+      {
+       "no": "7",
+       "text": "Position of ship on completion of discharge"
+      },
+      {
+       "no": "8",
+       "text": "Ship's speed(s) during discharge"
+      },
+      {
+       "no": "9.1",
+       "text": "Method: through 15 ppm equipment"
+      },
+      {
+       "no": "9.2",
+       "text": "Method: to reception facilities"
+      },
+      {
+       "no": "10",
+       "text": "Quantity discharged"
+      }
+     ],
+     "regulatory_check": {
+      "9.1": [
+       "R-AI-OUTSIDE-MACHINERY",
+       "R-AI-SA-MACHINERY",
+       "R-AI-ANTARCTIC-ANY-OIL"
+      ]
+     },
+     "external_check": {
+      "9.2": "reception_receipt"
+     }
+    },
+    {
+     "code": "C",
+     "title": "Collection, transfer and disposal of oil residues (sludge and other oil residues)",
+     "items": [
+      {
+       "no": "11.1",
+       "text": "Collection: identity of tank(s)"
+      },
+      {
+       "no": "11.2",
+       "text": "Collection: capacity of tank(s)"
+      },
+      {
+       "no": "11.3",
+       "text": "Collection: total quantity of retention (recorded weekly)"
+      },
+      {
+       "no": "11.4",
+       "text": "Collection: quantity of residue collected by manual operation"
+      },
+      {
+       "no": "12.1",
+       "text": "Disposal: to reception facilities (identify port)"
+      },
+      {
+       "no": "12.2",
+       "text": "Disposal: to another (other) tank(s)"
+      },
+      {
+       "no": "12.3",
+       "text": "Disposal: incinerated (total time, start and stop)"
+      },
+      {
+       "no": "12.4",
+       "text": "Disposal: other method (state which)"
+      }
+     ],
+     "consistency_check": [
+      "weekly_11_entry",
+      "sludge_tank_balance"
+     ],
+     "external_check": {
+      "12.1": "reception_receipt"
+     }
+    },
+    {
+     "code": "D",
+     "title": "Non-automatic starting of discharge overboard, transfer or disposal otherwise of bilge water which has accumulated in machinery spaces",
+     "items": [
+      {
+       "no": "13",
+       "text": "Quantity discharged, transferred or disposed of"
+      },
+      {
+       "no": "14",
+       "text": "Time of discharge, transfer or disposal (start and stop)"
+      },
+      {
+       "no": "15.1",
+       "text": "Method: through 15 ppm equipment (state position at start and end)"
+      },
+      {
+       "no": "15.2",
+       "text": "Method: to reception facilities (identify port)"
+      },
+      {
+       "no": "15.3",
+       "text": "Method: to slop tank or holding tank or other tank(s) (quantity retained)"
+      }
+     ],
+     "regulatory_check": {
+      "15.1": [
+       "R-AI-OUTSIDE-MACHINERY",
+       "R-AI-SA-MACHINERY",
+       "R-AI-ANTARCTIC-ANY-OIL"
+      ]
+     },
+     "external_check": {
+      "15.2": "reception_receipt"
+     },
+     "consistency_check": [
+      "bilge_tank_balance",
+      "ows_operational_at_time"
+     ]
+    },
+    {
+     "code": "E",
+     "title": "Automatic starting of discharge overboard, transfer or disposal otherwise of bilge water which has accumulated in machinery spaces",
+     "items": [
+      {
+       "no": "16",
+       "text": "Time and position of ship at which the system has been put into automatic mode for discharge overboard through 15 ppm equipment"
+      },
+      {
+       "no": "17",
+       "text": "Time when the system has been put into automatic mode for transfer of bilge water to holding tank (identify tank)"
+      },
+      {
+       "no": "18",
+       "text": "Time when the system has been put into manual operation"
+      }
+     ],
+     "regulatory_check": {
+      "16": [
+       "R-AI-OUTSIDE-MACHINERY",
+       "R-AI-SA-MACHINERY",
+       "R-AI-ANTARCTIC-ANY-OIL"
+      ]
+     }
+    },
+    {
+     "code": "F",
+     "title": "Condition of the oil filtering equipment",
+     "items": [
+      {
+       "no": "19",
+       "text": "Time of system failure"
+      },
+      {
+       "no": "20",
+       "text": "Time when system has been made operational"
+      },
+      {
+       "no": "21",
+       "text": "Reasons for failure"
+      }
+     ],
+     "consistency_check": [
+      "code_I_valve_sealed_on_failure",
+      "no_D_or_E_discharge_between_19_and_20"
+     ]
+    },
+    {
+     "code": "G",
+     "title": "Accidental or other exceptional discharges of oil",
+     "items": [
+      {
+       "no": "22",
+       "text": "Time of occurrence"
+      },
+      {
+       "no": "23",
+       "text": "Place or position of ship at time of occurrence"
+      },
+      {
+       "no": "24",
+       "text": "Approximate quantity and type of oil"
+      },
+      {
+       "no": "25",
+       "text": "Circumstances of discharge or escape, the reasons therefor and general remarks"
+      }
+     ],
+     "regulatory_check": [
+      "R-AI-EXCEPTIONS"
+     ]
+    },
+    {
+     "code": "H",
+     "title": "Bunkering of fuel or bulk lubricating oil",
+     "items": [
+      {
+       "no": "26.1",
+       "text": "Place of bunkering"
+      },
+      {
+       "no": "26.2",
+       "text": "Start and stop date and time of bunkering"
+      },
+      {
+       "no": "26.3",
+       "text": "Type and quantity of fuel oil and identity of tank(s) (quantity added and total content)"
+      },
+      {
+       "no": "26.4",
+       "text": "Type and quantity of lubricating oil and identity of tank(s) (quantity added and total content)"
+      }
+     ],
+     "external_check": {
+      "26.3": "bunker_delivery_note"
+     },
+     "consistency_check": [
+      "fuel_tank_balance"
+     ]
+    },
+    {
+     "code": "I",
+     "title": "Additional operational procedures and general remarks",
+     "items": [
+      {
+       "no": "-",
+       "text": "Free text (e.g. overboard valve sealed/unsealed, exemptions, corrections)"
+      }
+     ]
+    }
+   ],
+   "mandatory_fields": {
+    "B": [
+     "5",
+     "6",
+     "7",
+     "8",
+     "9",
+     "10"
+    ],
+    "C": [
+     "11.1",
+     "11.2",
+     "11.3"
+    ],
+    "D": [
+     "13",
+     "14",
+     "15"
+    ],
+    "E": [
+     "16|17|18"
+    ],
+    "F": [
+     "19",
+     "21"
+    ],
+    "G": [
+     "22",
+     "23",
+     "24",
+     "25"
+    ],
+    "H": [
+     "26.1",
+     "26.2",
+     "26.3|26.4"
+    ]
+   },
+   "validation_rules": {
+    "max_bilge_discharge_m3_per_entry": 30,
+    "weekly_sludge_entry_max_gap_days": 8,
+    "ows_rate_check_m3_per_h": 5,
+    "_note": "COMPANY POLICY thresholds – set by HSQE / technical dept"
+   }
+  },
+  {
+   "id": "BWRB_V2025",
+   "book": "BWRB",
+   "title": "Ballast Water Record Book (appendix II as amended by MEPC.369(80))",
+   "effective_from": "2025-02-01",
+   "effective_to": null,
+   "regulation_basis": "BWM Convention regulation B-2 and appendix II (form of Ballast Water Record Book) as amended by resolution MEPC.369(80)",
+   "source_ids": [
+    "SRC-DOC-BWRB-REYFA",
+    "SRC-DOC-BWRB-UMMS"
+   ],
+   "verification_note": "Transcribed from a ship-specific BWRB and a management-company draft, both stating they reproduce appendix II as amended by MEPC.369(80); verify against the resolution text. Recording guidance (BWM.2/Circ.80) referenced by the UMMS draft.",
+   "fields": {
+    "header": [
+     "ship_name",
+     "imo_number",
+     "gross_tonnage",
+     "flag",
+     "total_ballast_capacity_m3",
+     "ibwmc_number",
+     "period_from",
+     "period_to",
+     "tank_diagram",
+     "tank_capacity_table"
+    ],
+    "entry": [
+     "date",
+     "code",
+     "item",
+     "record_of_operations",
+     "officer_signature"
+    ]
+   },
+   "operation_codes": [
+    {
+     "code": "A",
+     "title": "Ballast water taken on board from the aquatic environment (ballasting)",
+     "items": [
+      {
+       "no": ".1",
+       "text": "Start time and location (port of uptake or latitude/longitude)"
+      },
+      {
+       "no": ".2",
+       "text": "Completion time and location (port or latitude/longitude and minimum depth of water during uptake)"
+      },
+      {
+       "no": ".3",
+       "text": "Identity of the tanks affected"
+      },
+      {
+       "no": ".4",
+       "text": "Estimated volume of uptake and final total quantity retained (m3)"
+      },
+      {
+       "no": ".5",
+       "text": "Whether conducted in accordance with the approved BWMP"
+      },
+      {
+       "no": ".6",
+       "text": "Ballast water treatment method"
+      }
+     ],
+     "regulatory_check": [
+      "R-BWM-D2"
+     ],
+     "consistency_check": [
+      "tank_capacity_not_exceeded",
+      "total_retained_balance"
+     ]
+    },
+    {
+     "code": "B",
+     "title": "Ballast water discharged into the aquatic environment (de-ballasting)",
+     "items": [
+      {
+       "no": ".1",
+       "text": "Start time and location (port of discharge or latitude/longitude)"
+      },
+      {
+       "no": ".2",
+       "text": "Completion time and location (port or latitude/longitude and minimum depth of water during discharge)"
+      },
+      {
+       "no": ".3",
+       "text": "Identity of the tanks affected"
+      },
+      {
+       "no": ".4",
+       "text": "Estimated volume of discharge and final total quantity retained (m3)"
+      },
+      {
+       "no": ".5",
+       "text": "Whether conducted in accordance with the approved BWMP"
+      },
+      {
+       "no": ".6",
+       "text": "Ballast water treatment method"
+      }
+     ],
+     "regulatory_check": [
+      "R-BWM-D2"
+     ],
+     "consistency_check": [
+      "discharge_not_exceeding_retained",
+      "treatment_method_present_if_D2",
+      "no_open_F_failure_at_time"
+     ]
+    },
+    {
+     "code": "C",
+     "title": "Ballast water exchanged, treated through internal circulation or treated in tank",
+     "items": [
+      {
+       "no": "1.1",
+       "text": "Exchange: start time and location (latitude/longitude)"
+      },
+      {
+       "no": "1.2",
+       "text": "Exchange: completion time and location"
+      },
+      {
+       "no": "1.3",
+       "text": "Exchange: minimum distance from the nearest land and minimum depth of water, or designated exchange area (reg. B-4.2)"
+      },
+      {
+       "no": "1.4",
+       "text": "Exchange: in accordance with BWMP; method (sequential / flow-through / dilution)"
+      },
+      {
+       "no": "1.5",
+       "text": "Exchange: identity of the tanks affected"
+      },
+      {
+       "no": "1.6",
+       "text": "Exchange: total quantity exchanged and final total on board (m3)"
+      },
+      {
+       "no": "1.7",
+       "text": "Exchange: treatment method for the incoming ballast water"
+      },
+      {
+       "no": "2.1",
+       "text": "Internal circulation / in-tank treatment: start time"
+      },
+      {
+       "no": "2.2",
+       "text": "Completion time"
+      },
+      {
+       "no": "2.3",
+       "text": "Tanks affected (source and destination if applicable)"
+      },
+      {
+       "no": "2.4",
+       "text": "Total quantity treated (m3)"
+      },
+      {
+       "no": "2.5",
+       "text": "Ballast water treatment method"
+      }
+     ],
+     "regulatory_check": {
+      "1": [
+       "R-BWM-D2"
+      ]
+     },
+     "note": "D-1 exchange distance/depth (200 nm & 200 m; 50 nm & 200 m fallback) to be added as a distance rule using the chart bathymetry layer."
+    },
+    {
+     "code": "D",
+     "title": "Uptake or discharge of ballast water from/to a port-based or reception facility",
+     "items": [
+      {
+       "no": ".1",
+       "text": "Start time and location of uptake/discharge (facility name)"
+      },
+      {
+       "no": ".2",
+       "text": "Completion time"
+      },
+      {
+       "no": ".3",
+       "text": "Operation carried out (uptake or discharge)"
+      },
+      {
+       "no": ".4",
+       "text": "Identity of the tanks affected"
+      },
+      {
+       "no": ".5",
+       "text": "Total quantity (m3) and final quantity retained on board"
+      },
+      {
+       "no": ".6",
+       "text": "Whether conducted in accordance with the approved BWMP"
+      },
+      {
+       "no": ".7",
+       "text": "Onboard ballast water treatment method"
+      }
+     ],
+     "external_check": "reception_receipt"
+    },
+    {
+     "code": "E",
+     "title": "Accidental discharge/ingress or other exceptional uptake or discharge of ballast water",
+     "items": [
+      {
+       "no": ".1",
+       "text": "Start time and location (port or latitude/longitude)"
+      },
+      {
+       "no": ".2",
+       "text": "Completion time"
+      },
+      {
+       "no": ".3",
+       "text": "Operation carried out (ingress, uptake or discharge)"
+      },
+      {
+       "no": ".4",
+       "text": "Identity of the tanks affected"
+      },
+      {
+       "no": ".5",
+       "text": "Total quantity (m3)"
+      },
+      {
+       "no": ".6",
+       "text": "Circumstances, reason, any treatment method used and general remarks"
+      }
+     ]
+    },
+    {
+     "code": "F",
+     "title": "Failures and inoperabilities of the ballast water management system",
+     "items": [
+      {
+       "no": ".1",
+       "text": "Time and location of failure of the BWMS"
+      },
+      {
+       "no": ".2",
+       "text": "Operation carried out (uptake or discharge)"
+      },
+      {
+       "no": ".3",
+       "text": "Description of the issue (alarm kind or circumstances)"
+      },
+      {
+       "no": ".4",
+       "text": "Time and location when the BWMS has been made operational"
+      }
+     ],
+     "consistency_check": [
+      "second_F_entry_when_rectified",
+      "B_discharge_during_open_F_requires_review"
+     ]
+    },
+    {
+     "code": "G",
+     "title": "Ballast tank cleaning/flushing, removal and disposal of sediments",
+     "items": [
+      {
+       "no": ".1",
+       "text": "Time and location on commencement"
+      },
+      {
+       "no": ".2",
+       "text": "Time and location on completion"
+      },
+      {
+       "no": ".3",
+       "text": "Tank(s) identification per BWMP"
+      },
+      {
+       "no": ".4",
+       "text": "Discharge or disposal to a reception facility (quantity m3, facility name)"
+      },
+      {
+       "no": ".5",
+       "text": "Disposal or discharge to the aquatic environment per BWMP (quantity m3, minimum distance from nearest land nm, minimum depth m)"
+      }
+     ]
+    },
+    {
+     "code": "H",
+     "title": "Additional operational procedures and general remarks",
+     "items": [
+      {
+       "no": "-",
+       "text": "Free text: exemptions (reg. A-4), additional measures (reg. C-1), internal transfers for trim/stability, BWMS bypass reasons"
+      }
+     ]
+    }
+   ],
+   "mandatory_fields": {
+    "A": [
+     ".1",
+     ".2",
+     ".3",
+     ".4",
+     ".5",
+     ".6"
+    ],
+    "B": [
+     ".1",
+     ".2",
+     ".3",
+     ".4",
+     ".5",
+     ".6"
+    ],
+    "C": [
+     "1.1|2.1"
+    ],
+    "D": [
+     ".1",
+     ".3",
+     ".4",
+     ".5"
+    ],
+    "E": [
+     ".1",
+     ".3",
+     ".4",
+     ".5",
+     ".6"
+    ],
+    "F": [
+     ".1",
+     ".3"
+    ],
+    "G": [
+     ".1",
+     ".2",
+     ".3",
+     ".4|.5"
+    ]
+   },
+   "validation_rules": {
+    "retention_years_onboard": 2,
+    "retention_years_company": 3,
+    "_note": "COMPANY POLICY thresholds – set by HSQE"
+   }
+  }
+ ]
+}

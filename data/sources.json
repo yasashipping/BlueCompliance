@@ -1,1 +1,159 @@
-{"_schema":"bluecompliance.sources.v1","_note":"Every regulation, zone and rule points to one or more source ids here. 'in_project' = document is in the BlueCompliance project knowledge base and was read for this dataset.","sources":[{"id":"SRC-IMO-CIRC778-R4","authority":"IMO (MEPC Secretariat)","title":"MEPC.1/Circ.778/Rev.4 – List of Special Areas, Emission Control Areas and Particularly Sensitive Sea Areas","date":"2023-10-30","type":"circular","in_project":true,"used_for":"Designation status and effective dates of all Special Areas, ECAs and PSSAs; PSSA associated protective measures."},{"id":"SRC-MARPOL-CONS","authority":"IMO","title":"MARPOL Consolidated Edition 2022 (IMO IF520E) – scanned copy","date":"2022","type":"convention","in_project":true,"used_for":"Area boundary definitions (Annex I reg 1.11, Annex V reg 1.14, Annex VI Appendix VII) – read and verified visually for this dataset. Discharge/emission rule summaries still to be verified paragraph by paragraph against this text (next task)."},{"id":"SRC-IMO-A982-24","authority":"IMO Assembly","title":"Resolution A.982(24) – Revised Guidelines for the Identification and Designation of PSSAs","date":"2005-12-01","type":"resolution","in_project":true,"used_for":"PSSA concept, associated protective measures framework."},{"id":"SRC-IMO-MEPC356-78","authority":"IMO MEPC","title":"Resolution MEPC.356(78) – 2022 Guidelines for brief sampling of anti-fouling systems on ships","date":"2022-06-10","type":"resolution","in_project":true,"used_for":"AFS PSC sampling context; reference to cybutryne controls (MEPC.331(76))."},{"id":"SRC-IMO-MEPC357-78","authority":"IMO MEPC","title":"Resolution MEPC.357(78) – 2022 Guidelines for inspection of anti-fouling systems on ships","date":"2022-06-10","type":"resolution","in_project":true,"used_for":"AFS inspection context."},{"id":"SRC-IMO-MEPC358-78","authority":"IMO MEPC","title":"Resolution MEPC.358(78) – 2022 Guidelines for survey and certification of anti-fouling systems on ships","date":"2022-06-10","type":"resolution","in_project":true,"used_for":"AFS survey/certification context."},{"id":"SRC-EU-2023-957","authority":"European Parliament and Council","title":"Regulation (EU) 2023/957 amending Regulation (EU) 2015/757 (MRV) – inclusion of maritime transport in the EU ETS","date":"2023-05-10","type":"eu_regulation","in_project":true,"used_for":"EU ETS maritime scope (voyage/port based, not position based)."},{"id":"SRC-NE-50M-OCEAN","authority":"Natural Earth (public domain)","title":"Natural Earth 1:50m ocean polygon","date":"n/a","type":"geodata","in_project":false,"used_for":"Coastline used to clip regulatory boundary envelopes into sea-area polygons. Screening quality only; not a nautical chart."},{"id":"SRC-PENDING-MEPC83","authority":"IMO MEPC","title":"MEPC 83 outcomes (Canadian Arctic ECA, Norwegian Sea ECA) – NOT YET IN PROJECT SOURCES","date":"2025","type":"pending_verification","in_project":false,"used_for":"Placeholder entries only. Obtain MEPC.1/Circ.778/Rev.5 or the adopting resolutions before enabling."},{"id":"SRC-IMO-MEPC190-60","authority":"IMO MEPC","title":"Resolution MEPC.190(60) – North American ECA (new Appendix VII)","date":"2010-03-26","type":"resolution","in_project":false,"used_for":"Machine-readable source of the 298 NA ECA coordinates (IMO website text layer), cross-checked against the 2022 edition."},{"id":"SRC-IMO-MEPC202-62","authority":"IMO MEPC","title":"Resolution MEPC.202(62) – United States Caribbean Sea ECA","date":"2011-07-15","type":"resolution","in_project":false,"used_for":"Machine-readable source of the 55 US Caribbean ECA coordinates, cross-checked against the 2022 edition."},{"id":"SRC-NE-10M-LAND","authority":"Natural Earth (public domain)","title":"Natural Earth 1:10m land polygons","date":"n/a","type":"geodata","in_project":false,"used_for":"Coastline for the landward closure of every zone polygon and for the chart base layer."}]}
+{
+ "_schema": "bluecompliance.sources.v1",
+ "_note": "Every regulation, zone and rule points to one or more source ids here. 'in_project' = document is in the BlueCompliance project knowledge base and was read for this dataset.",
+ "sources": [
+  {
+   "id": "SRC-IMO-CIRC778-R4",
+   "authority": "IMO (MEPC Secretariat)",
+   "title": "MEPC.1/Circ.778/Rev.4 – List of Special Areas, Emission Control Areas and Particularly Sensitive Sea Areas",
+   "date": "2023-10-30",
+   "type": "circular",
+   "in_project": true,
+   "used_for": "Designation status and effective dates of all Special Areas, ECAs and PSSAs; PSSA associated protective measures."
+  },
+  {
+   "id": "SRC-MARPOL-CONS",
+   "authority": "IMO",
+   "title": "MARPOL Consolidated Edition 2022 (IMO IF520E) – scanned copy",
+   "date": "2022",
+   "type": "convention",
+   "in_project": false,
+   "used_for": "Annex I/IV/V/VI discharge and emission criteria in the rule set. NOTE: the copy in the project knowledge base is an empty file (784 bytes) – rule wording has not been verified against it; re-upload the consolidated text and verify."
+  },
+  {
+   "id": "SRC-IMO-A982-24",
+   "authority": "IMO Assembly",
+   "title": "Resolution A.982(24) – Revised Guidelines for the Identification and Designation of PSSAs",
+   "date": "2005-12-01",
+   "type": "resolution",
+   "in_project": true,
+   "used_for": "PSSA concept, associated protective measures framework."
+  },
+  {
+   "id": "SRC-IMO-MEPC356-78",
+   "authority": "IMO MEPC",
+   "title": "Resolution MEPC.356(78) – 2022 Guidelines for brief sampling of anti-fouling systems on ships",
+   "date": "2022-06-10",
+   "type": "resolution",
+   "in_project": true,
+   "used_for": "AFS PSC sampling context; reference to cybutryne controls (MEPC.331(76))."
+  },
+  {
+   "id": "SRC-IMO-MEPC357-78",
+   "authority": "IMO MEPC",
+   "title": "Resolution MEPC.357(78) – 2022 Guidelines for inspection of anti-fouling systems on ships",
+   "date": "2022-06-10",
+   "type": "resolution",
+   "in_project": true,
+   "used_for": "AFS inspection context."
+  },
+  {
+   "id": "SRC-IMO-MEPC358-78",
+   "authority": "IMO MEPC",
+   "title": "Resolution MEPC.358(78) – 2022 Guidelines for survey and certification of anti-fouling systems on ships",
+   "date": "2022-06-10",
+   "type": "resolution",
+   "in_project": true,
+   "used_for": "AFS survey/certification context."
+  },
+  {
+   "id": "SRC-EU-2023-957",
+   "authority": "European Parliament and Council",
+   "title": "Regulation (EU) 2023/957 amending Regulation (EU) 2015/757 (MRV) – inclusion of maritime transport in the EU ETS",
+   "date": "2023-05-10",
+   "type": "eu_regulation",
+   "in_project": true,
+   "used_for": "EU ETS maritime scope (voyage/port based, not position based)."
+  },
+  {
+   "id": "SRC-NE-50M-OCEAN",
+   "authority": "Natural Earth (public domain)",
+   "title": "Natural Earth 1:50m ocean polygon",
+   "date": "n/a",
+   "type": "geodata",
+   "in_project": false,
+   "used_for": "Coastline used to clip regulatory boundary envelopes into sea-area polygons. Screening quality only; not a nautical chart."
+  },
+  {
+   "id": "SRC-PENDING-MEPC83",
+   "authority": "IMO MEPC",
+   "title": "MEPC 83 outcomes (Canadian Arctic ECA, Norwegian Sea ECA) – NOT YET IN PROJECT SOURCES",
+   "date": "2025",
+   "type": "pending_verification",
+   "in_project": false,
+   "used_for": "Placeholder entries only. Obtain MEPC.1/Circ.778/Rev.5 or the adopting resolutions before enabling."
+  },
+  {
+   "id": "SRC-IMO-MEPC190-60",
+   "authority": "IMO MEPC",
+   "title": "Resolution MEPC.190(60) – North American ECA (new Appendix VII)",
+   "date": "2010-03-26",
+   "type": "resolution",
+   "in_project": false,
+   "used_for": "Machine-readable source of the 298 NA ECA coordinates (IMO website text layer), cross-checked against the 2022 edition."
+  },
+  {
+   "id": "SRC-IMO-MEPC202-62",
+   "authority": "IMO MEPC",
+   "title": "Resolution MEPC.202(62) – United States Caribbean Sea ECA",
+   "date": "2011-07-15",
+   "type": "resolution",
+   "in_project": false,
+   "used_for": "Machine-readable source of the 55 US Caribbean ECA coordinates, cross-checked against the 2022 edition."
+  },
+  {
+   "id": "SRC-NE-10M-LAND",
+   "authority": "Natural Earth (public domain)",
+   "title": "Natural Earth 1:10m land polygons",
+   "date": "n/a",
+   "type": "geodata",
+   "in_project": false,
+   "used_for": "Coastline for the landward closure of every zone polygon and for the chart base layer."
+  },
+  {
+   "id": "SRC-DOC-GRB-PART1",
+   "authority": "Shipowner form (unknown), reproducing IMO text",
+   "title": "Garbage Record Book Part I – form reproducing MARPOL Annex V appendix II (categories A–I, Part II J/K, Table 1)",
+   "date": null,
+   "type": "form",
+   "in_project": true,
+   "used_for": "GRB_V2020 template (draft)"
+  },
+  {
+   "id": "SRC-DOC-GRB-DOMINICA",
+   "authority": "Commonwealth of Dominica Maritime Administration",
+   "title": "Garbage Record Book CDP-603 Rev04 (flag form; introduction cites old reg. 9 numbering – check edition)",
+   "date": null,
+   "type": "form",
+   "in_project": true,
+   "used_for": "GRB layout cross-check only"
+  },
+  {
+   "id": "SRC-DOC-ORB1-NOVOMAR",
+   "authority": "Novomar Assessoria Empresarial Ltda (commercial form)",
+   "title": "Oil Record Book Part I – Machinery Space Operations, ref. ORB-I-EN-2019 (reproduces appendix III list of items)",
+   "date": "2019",
+   "type": "form",
+   "in_project": true,
+   "used_for": "ORB1_V2019 template (draft)"
+  },
+  {
+   "id": "SRC-DOC-BWRB-REYFA",
+   "authority": "m/v Reyfa (ship-specific book)",
+   "title": "Ballast Water Record Book (D-2) – reproduces BWM appendix II codes A–H",
+   "date": null,
+   "type": "form",
+   "in_project": true,
+   "used_for": "BWRB_V2025 template (draft)"
+  },
+  {
+   "id": "SRC-DOC-BWRB-UMMS",
+   "authority": "Union Marine Management Services Pte Ltd",
+   "title": "Ballast Water Record Book – final draft based on appendix II as amended by MEPC.369(80), with recording guidance",
+   "date": null,
+   "type": "form",
+   "in_project": true,
+   "used_for": "BWRB_V2025 template (draft); recording guidance for codes C1/C2/F/H"
+  }
+ ]
+}
