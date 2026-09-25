@@ -164,6 +164,31 @@ code{ font-family:var(--mono); font-size:12px; }
 .datasrc{ font-size:11px; color:var(--ink-3); }
 .datasrc b{ color:var(--permitted); }
 .hoverbox{ pointer-events:none; }
+
+.rbwrap{ display:grid; grid-template-columns:340px 1fr; height:100%; }
+.rbside{ overflow:auto; padding:16px; border-right:1px solid var(--line); background:var(--paper-2); }
+.rbside h2{ font-size:13px; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-3); margin:14px 0 8px; }
+.rbside h2:first-child{ margin-top:0; }
+.rbmain{ overflow:auto; padding:16px 20px; display:grid; grid-template-rows:auto 1fr; gap:14px; }
+.rbpanel h3{ font-size:14px; margin:0 0 8px; }
+.rbuser{ display:flex; justify-content:space-between; align-items:center; font-size:12px; color:var(--ink-2); }
+.row2{ display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.rbside details{ border:1px solid var(--line); border-radius:6px; padding:6px 10px; margin-bottom:10px; font-size:12px; }
+.rbside details summary{ cursor:pointer; color:var(--brand); }
+.fnd{ border:1px solid var(--line); border-left:4px solid var(--neutral); border-radius:8px; padding:8px 10px; margin-bottom:6px; font-size:12px; }
+.fnd[data-sev="non_compliant"],.fnd[data-sev="critical"]{ border-left-color:var(--prohibited); }
+.fnd[data-sev="warning"]{ border-left-color:var(--restricted); }
+.fnd[data-sev="review"]{ border-left-color:var(--verify); }
+.fnd[data-sev="info"],.fnd[data-sev="ok"]{ border-left-color:var(--permitted); }
+.fnd b{ font-weight:600; }
+.fnd .k{ color:var(--ink-3); font-family:var(--mono); font-size:11px; }
+.ent{ border:1px solid var(--line); border-radius:8px; padding:8px 10px; margin-bottom:8px; }
+.ent .h{ display:flex; gap:8px; align-items:center; font-size:12px; }
+.ent .h b{ flex:1; }
+.ent .sub{ font-size:12px; color:var(--ink-2); margin:4px 0; }
+.badge{ font-size:11px; padding:2px 7px; border-radius:10px; background:var(--paper); border:1px solid var(--line); }
+.badge[data-s="COMPLIANT"]{ color:var(--permitted); } .badge[data-s="NON_COMPLIANT"]{ color:var(--prohibited); } .badge[data-s="WARNING"]{ color:var(--restricted); } .badge[data-s="REQUIRES_REVIEW"],.badge[data-s="INCOMPLETE"]{ color:var(--verify); }
+@media (max-width:900px){ .rbwrap{ grid-template-columns:1fr; grid-template-rows:auto 1fr; } .rbside{ border-right:0; border-bottom:1px solid var(--line); } }
 </style>
 </head>
 <body>
@@ -173,6 +198,7 @@ code{ font-family:var(--mono); font-size:12px; }
     <div class="brand">BlueCompliance <em>Position regulatory check · Phase 2</em></div>
     <nav role="tablist">
       <button role="tab" aria-selected="true" data-view="map">Map</button>
+      <button role="tab" aria-selected="false" data-view="rb">Record books</button>
       <button role="tab" aria-selected="false" data-view="zones">Zone registry</button>
       <button role="tab" aria-selected="false" data-view="rules">Rules</button>
       <button role="tab" aria-selected="false" data-view="sources">Sources</button>
@@ -254,6 +280,44 @@ code{ font-family:var(--mono); font-size:12px; }
       <h1>Zone registry</h1>
       <p class="lead">Every MARPOL Special Area, Emission Control Area and PSSA known to the dataset, with its designation status and the date the more stringent measures took effect (MEPC.1/Circ.778/Rev.4). Geometry status tells you how the polygon was produced.</p>
       <div class="tablewrap"><table id="zonetable"></table></div>
+    </div></section>
+
+    <!-- ========== RECORD BOOKS ========== -->
+    <section class="view" id="view-rb"><div class="rbwrap">
+      <aside class="rbside">
+        <div id="rb-auth">
+          <h2>Sign in</h2>
+          <p class="hint">Record books are stored in the company database and need a user account (Supabase Auth).</p>
+          <div class="field"><label>E-mail</label><input id="au-email" type="email" autocomplete="username"></div>
+          <div class="field"><label>Password</label><input id="au-pass" type="password" autocomplete="current-password"></div>
+          <button class="btn primary" id="au-btn">Sign in</button>
+          <p class="hint" id="au-msg"></p>
+        </div>
+        <div id="rb-main" hidden>
+          <div class="rbuser"><span id="au-who"></span><button class="btn small" id="au-out">Sign out</button></div>
+          <h2>Vessel</h2>
+          <div class="field"><label>Select vessel</label><select id="rb-vessel"></select></div>
+          <details id="rb-addv"><summary>Add vessel</summary>
+            <div class="field"><label>Name</label><input id="nv-name"></div>
+            <div class="row2"><div class="field"><label>IMO</label><input id="nv-imo"></div><div class="field"><label>GT</label><input id="nv-gt" type="number"></div></div>
+            <div class="row2"><div class="field"><label>Type</label><select id="nv-type"><option value="cargo">Cargo</option><option value="oil_tanker">Oil tanker</option><option value="passenger">Passenger</option><option value="other">Other</option></select></div><div class="field"><label>Flag</label><input id="nv-flag"></div></div>
+            <button class="btn small" id="nv-btn">Save vessel</button>
+          </details>
+          <h2>Book</h2>
+          <div class="field"><label>Record book</label><select id="rb-book"><option value="GRB">Garbage Record Book</option><option value="ORB1">Oil Record Book Part I</option><option value="BWRB">Ballast Water Record Book</option></select></div>
+          <div class="hint" id="rb-tplinfo"></div>
+          <h2>New entry</h2>
+          <div class="field"><label>Operation</label><select id="rb-op"></select></div>
+          <div id="rb-form"></div>
+          <button class="btn" id="rb-eval">Evaluate entry</button>
+          <button class="btn primary" id="rb-save" disabled>Save entry + findings</button>
+          <p class="hint">Evaluate first. Saving is append-only: corrections create a new entry that supersedes the old one.</p>
+        </div>
+      </aside>
+      <div class="rbmain">
+        <div class="rbpanel"><h3>Evaluation</h3><div id="rb-result"><p class="hint">Fill an entry and press Evaluate.</p></div></div>
+        <div class="rbpanel"><h3>Entries &amp; findings <span class="hint" id="rb-count"></span></h3><div id="rb-list"><p class="hint">Sign in and select a vessel.</p></div></div>
+      </div>
     </div></section>
 
     <!-- ========== RULES ========== -->
@@ -585,7 +649,161 @@ function initUI(dataSource) {
   return { setPosition, run };
 }
 
-loadData().then(src => { ui = initUI(src); }).catch(e => { console.error(e); document.getElementById('dbody').textContent = 'Data could not be loaded: ' + e; });
+/* ------------------------------ record books ------------------------------ */
+const rb = (() => {
+  const $ = id => document.getElementById(id);
+  const esc = t => String(t ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  let user = null, vessels = [], TPL = {}, curVessel = null, curTpl = null, lastEval = null, entries = [];
+  const SEV_RANK = { info: 0, ok: 0, review: 1, warning: 2, non_compliant: 3, critical: 4 };
+  const STATUS_OF = { 0: 'COMPLIANT', 1: 'REQUIRES_REVIEW', 2: 'WARNING', 3: 'NON_COMPLIANT', 4: 'NON_COMPLIANT' };
+  // ---- auth (Supabase GoTrue REST) ----
+  async function signIn(email, password) {
+    const r = await fetch(`${CFG.supabaseUrl}/auth/v1/token?grant_type=password`, { method: 'POST', headers: { apikey: CFG.supabaseAnonKey, 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
+    const j = await r.json(); if (!r.ok) throw new Error(j.error_description || j.msg || j.error || 'sign-in failed');
+    user = j.user; db.token = j.access_token; try { sessionStorage.setItem('bc.session', JSON.stringify({ t: j.access_token, u: j.user, exp: Date.now() + (j.expires_in || 3600) * 1000 })); } catch (e) {}
+    return user;
+  }
+  function restore() { try { const s = JSON.parse(sessionStorage.getItem('bc.session') || 'null'); if (s && s.exp > Date.now()) { user = s.u; db.token = s.t; return true; } } catch (e) {} return false; }
+  function signOut() { user = null; db.token = null; try { sessionStorage.removeItem('bc.session'); } catch (e) {} $('rb-main').hidden = true; $('rb-auth').hidden = false; }
+  const role = () => (user && user.app_metadata && user.app_metadata.role) || 'user';
+  // ---- data ----
+  async function loadVessels() { vessels = await db.get('vessel?select=*&active=is.true&order=name'); const sel = $('rb-vessel'); sel.innerHTML = vessels.map(v => `<option value="${v.id}">${esc(v.name)}${v.imo ? ' · IMO ' + esc(v.imo) : ''}</option>`).join('') || '<option value="">— add a vessel —</option>'; curVessel = vessels.find(v => v.id === sel.value) || null; }
+  async function loadTemplates() { const t = await db.get('rb_template?select=*&order=effective_from.desc'); for (const x of t) { if (!TPL[x.book] || x.approval_status === 'approved') TPL[x.book] = x; } }
+  async function loadEntries() {
+    if (!curVessel) { entries = []; renderList(); return; }
+    entries = await db.get(`rb_entry?select=*,rb_book!inner(vessel_id,book),rb_finding(*)&rb_book.vessel_id=eq.${curVessel.id}&rb_book.book=eq.${$('rb-book').value}&order=ts_utc.desc&limit=50`);
+    renderList();
+  }
+  async function bookId() {
+    const b = await db.get(`rb_book?select=id&vessel_id=eq.${curVessel.id}&book=eq.${curTpl.book}&closed_on=is.null&limit=1`);
+    if (b.length) return b[0].id;
+    const r = await fetch(`${CFG.supabaseUrl}/rest/v1/rb_book`, { method: 'POST', headers: { ...db.h(), Prefer: 'return=representation' }, body: JSON.stringify({ vessel_id: curVessel.id, book: curTpl.book, template_id: curTpl.id }) });
+    const j = await r.json(); if (!r.ok) throw new Error(JSON.stringify(j)); return j[0].id;
+  }
+  async function insertRet(table, row) { const r = await fetch(`${CFG.supabaseUrl}/rest/v1/${table}`, { method: 'POST', headers: { ...db.h(), Prefer: 'return=representation' }, body: JSON.stringify(row) }); const j = await r.json(); if (!r.ok) throw new Error(j.message || JSON.stringify(j)); return Array.isArray(j) ? j[0] : j; }
+  // ---- form generation from template ----
+  function opList() { const sel = $('rb-op'); sel.innerHTML = curTpl.operation_codes.map(o => `<option value="${esc(o.code)}">${esc(o.code)} — ${esc(o.title)}</option>`).join(''); }
+  function catOptions() { const c = (curTpl.fields._extra || {}).categories || {}; const all = Object.assign({}, c.part_I || {}, c.part_II || {}); return Object.entries(all).map(([k, v]) => `<option value="${k}">${k} — ${esc(v)}</option>`).join(''); }
+  function form() {
+    const op = curTpl.operation_codes.find(o => o.code === $('rb-op').value); const b = curTpl.book;
+    const pos = `<div class="row2"><div class="field"><label>Latitude</label><input id="f-lat" placeholder="40.3000 or 40 18.0 N"></div><div class="field"><label>Longitude</label><input id="f-lon" placeholder="025.3000 or 025 18.0 E"></div></div><button class="btn small" id="f-frommap" type="button">Use map position</button>`;
+    let h = `<div class="field"><label>Date / time (UTC)</label><input id="f-ts" type="datetime-local"></div>`;
+    if (b === 'GRB') {
+      if (op.code === '4.1.1') h += `<div class="field"><label>Port / facility or receiving ship</label><input id="f-port"></div>`;
+      if (op.code !== '4.1.1') h += pos;
+      h += `<div class="field"><label>Garbage category</label><select id="f-cat">${catOptions()}</select></div><div class="field"><label>Estimated amount (m³)</label><input id="f-m3" type="number" step="0.01" min="0"></div>`;
+      if (op.code === '4.1.2') h += `<div class="field"><label>Stop time (UTC)</label><input id="f-ts2" type="datetime-local"></div>`;
+      if (op.code === '4.1.4') h += `<div class="field"><label>Reason for discharge / loss</label><input id="f-reason"></div>`;
+    } else if (b === 'ORB1') {
+      h += `<div class="field"><label>Item(s)</label><select id="f-item">${op.items.map(i => `<option value="${esc(i.no)}">${esc(i.no)} ${esc(i.text.slice(0, 70))}</option>`).join('')}</select></div>` + pos +
+           `<div class="field"><label>Tank(s)</label><input id="f-tank"></div><div class="field"><label>Quantity (m³)</label><input id="f-m3" type="number" step="0.01" min="0"></div><div class="field"><label>Record of operations (text)</label><input id="f-text"></div>`;
+    } else {
+      h += pos + `<div class="field"><label>Tank(s)</label><input id="f-tank"></div><div class="field"><label>Quantity (m³)</label><input id="f-m3" type="number" step="0.01" min="0"></div><div class="field"><label>Treatment method</label><select id="f-treat"><option value="">—</option><option>D-2 BWMS</option><option>D-1 exchange</option><option>None</option></select></div><div class="field"><label>Min. water depth (m)</label><input id="f-depth" type="number"></div><div class="field"><label>Record of operations (text)</label><input id="f-text"></div>`;
+    }
+    h += `<div class="field"><label>Officer in charge</label><input id="f-officer"></div><div class="field"><label>Remarks</label><input id="f-remarks"></div>`;
+    $('rb-form').innerHTML = h;
+    const fm = $('f-frommap'); if (fm) fm.onclick = () => { const m = map.st.marker; if (!m) { alert('Click a position on the Map tab first.'); return; } $('f-lat').value = m[1].toFixed(4); $('f-lon').value = m[0].toFixed(4); };
+    $('rb-save').disabled = true; lastEval = null;
+  }
+  function readForm() {
+    const g = id => { const e = $(id); return e ? e.value : null; };
+    const lat = g('f-lat') != null ? parseCoord(g('f-lat'), true) : NaN, lon = g('f-lon') != null ? parseCoord(g('f-lon'), false) : NaN;
+    return { op: $('rb-op').value, ts: g('f-ts'), ts2: g('f-ts2'), lat: isNaN(lat) ? null : lat, lon: isNaN(lon) ? null : lon, port: g('f-port'), cat: g('f-cat'), m3: g('f-m3') ? parseFloat(g('f-m3')) : null, reason: g('f-reason'), item: g('f-item'), tank: g('f-tank'), text: g('f-text'), treat: g('f-treat'), depth: g('f-depth'), officer: g('f-officer'), remarks: g('f-remarks') };
+  }
+  // ---- evaluation: form → consistency → regulatory ----
+  async function evaluateEntry() {
+    const f = readForm(), op = curTpl.operation_codes.find(o => o.code === f.op), findings = [], vr = curTpl.validation_rules || {};
+    const F = (kind, severity, code, message, extra) => findings.push(Object.assign({ kind, severity, code, message }, extra || {}));
+    if (!f.ts) F('form', 'warning', 'MISSING_DATETIME', 'Date/time of the operation is missing.');
+    const needPos = curTpl.book !== 'GRB' || f.op !== '4.1.1';
+    if (needPos && (f.lat == null || f.lon == null)) F('form', 'warning', 'MISSING_POSITION', 'Position (latitude/longitude) is required for this operation.');
+    if (curTpl.book === 'GRB' && f.op === '4.1.1' && !f.port) F('form', 'warning', 'MISSING_FACILITY', 'Port/facility or receiving ship is required for a discharge to reception facility.');
+    if (f.m3 == null || isNaN(f.m3)) F('form', 'warning', 'MISSING_QUANTITY', 'Estimated quantity is missing.');
+    else if (f.m3 < 0) F('form', 'warning', 'NEGATIVE_QUANTITY', 'Quantity cannot be negative (DATA QUALITY ISSUE).');
+    else if (vr.max_amount_m3_per_entry && f.m3 > vr.max_amount_m3_per_entry) F('consistency', 'review', 'QUANTITY_PLAUSIBILITY', `Quantity ${f.m3} m³ exceeds the company plausibility threshold of ${vr.max_amount_m3_per_entry} m³ – please confirm (COMPANY POLICY).`);
+    if (f.op === '4.1.4' && !f.reason) F('form', 'warning', 'MISSING_REASON', 'Reason for the accidental/exceptional discharge or loss is mandatory (regulation 7 entry).');
+    if (!f.officer) F('form', 'review', 'MISSING_OFFICER', 'Officer in charge not recorded.');
+    if (curTpl.book === 'BWRB' && f.op === 'B' && (!f.treat || f.treat === 'None')) F('regulatory', 'warning', 'BW_TREATMENT_MISSING', 'Ballast discharge recorded without a treatment method (D-2 applies to all ships from 8 Sep 2024) – REVIEW.');
+    // duplicates (same op/category within ±30 min)
+    if (f.ts) { const t = new Date(f.ts + 'Z').getTime(); const dup = entries.find(e => e.operation_code === f.op && Math.abs(new Date(e.ts_utc).getTime() - t) < 30 * 60000 && (curTpl.book !== 'GRB' || (e.quantities || {}).category === f.cat)); if (dup) F('consistency', 'review', 'POSSIBLE_DUPLICATE', `A similar entry exists within 30 minutes (entry #${dup.entry_no}).`); }
+    // regulatory
+    let audit = null, ruleIds = [];
+    const rc = op.regulatory_check;
+    if (rc && rc !== 'none') ruleIds = Array.isArray(rc) ? rc : (rc[f.cat] || rc[f.item] || rc[String(f.item || '').split('.')[0]] || []);
+    const discharge = (curTpl.book === 'GRB' && f.op === '4.1.3') || (curTpl.book === 'ORB1' && ['B', 'D', 'E'].includes(f.op) && /(^9\.1|^15\.1|^16)/.test(f.item || '')) || (curTpl.book === 'BWRB' && ['B', 'C'].includes(f.op));
+    if (f.lat != null && f.lon != null && (ruleIds.length || discharge)) {
+      const vs = { name: curVessel.name, type: curVessel.ship_type, gt: curVessel.gt, constructed: curVessel.constructed, flag: curVessel.flag, fuel_sulphur: curVessel.fuel_sulphur, egcs: curVessel.egcs };
+      audit = await evaluate({ lat: f.lat, lon: f.lon, date: (f.ts || new Date().toISOString()).slice(0, 10), vessel: vs });
+      const rel = audit.results.filter(r => ruleIds.includes(r.rule_id));
+      if (discharge && !rel.length) F('regulatory', 'review', 'NO_RULE_MATCHED', 'No specific discharge rule matched this operation at this position; review the full position evaluation.', { evidence: { zones: audit.zones.map(z => z.id) } });
+      for (const r of rel) {
+        const z = r.zone ? { zone_id: r.zone.id, zone_name: r.zone.name, geometry_status: r.zone.geometry_status } : {};
+        if (r.status === 'PROHIBITED' || r.status === 'NON_COMPLIANT') F('regulatory', r.zone && !r.zone.geometry_status.startsWith('official') ? 'review' : 'non_compliant', 'DISCHARGE_PROHIBITED', `${r.category}: ${r.reasoning || r.summary}`, { rule_id: r.rule_id, ...z, regulation: r.regulation, fact_level: r.fact_level });
+        else if (r.status === 'RESTRICTED' || r.status === 'APPLIES') F('regulatory', 'review', 'CONDITIONS_APPLY', `${r.category}: ${r.reasoning || r.summary} Officer must confirm: ${(r.conditions || []).join('; ')}`, { rule_id: r.rule_id, ...z, regulation: r.regulation, fact_level: r.fact_level });
+        else if (['UNKNOWN', 'VERIFY', 'EQUIVALENT_VERIFY'].includes(r.status)) F('regulatory', 'review', 'VERIFY', `${r.category}: ${r.reasoning || r.summary}`, { rule_id: r.rule_id, ...z, regulation: r.regulation, fact_level: r.fact_level });
+        else F('regulatory', 'info', 'RULE_INFO', `${r.category}: ${r.summary}`, { rule_id: r.rule_id, ...z, regulation: r.regulation, fact_level: r.fact_level });
+      }
+      // GRB to-sea sanity: category prohibited everywhere
+      if (curTpl.book === 'GRB' && f.op === '4.1.3' && ['A', 'C', 'D', 'E', 'F', 'H', 'I', 'K'].includes(f.cat) && !rel.some(r => r.rule_id === 'R-AV-EVERYWHERE-PROHIBITED')) F('regulatory', 'non_compliant', 'DISCHARGE_PROHIBITED', `Category ${f.cat} may not be discharged into the sea anywhere (Annex V reg. 3).`, { rule_id: 'R-AV-EVERYWHERE-PROHIBITED' });
+    }
+    const worst = findings.reduce((m, x) => Math.max(m, SEV_RANK[x.severity] || 0), 0);
+    const missing = findings.some(x => x.kind === 'form');
+    lastEval = { f, findings, audit, status: missing && worst < 2 ? 'INCOMPLETE' : STATUS_OF[worst] };
+    renderEval(); $('rb-save').disabled = false;
+  }
+  function renderEval() {
+    const e = lastEval, h = [];
+    h.push(`<div class="ent"><div class="h"><b>${esc(curTpl.book)} · ${esc(e.f.op)}${e.f.cat ? ' · cat. ' + esc(e.f.cat) : ''}${e.f.item ? ' · item ' + esc(e.f.item) : ''}</b><span class="badge" data-s="${e.status}">${e.status.replace('_', ' ')}</span></div><div class="sub">${e.f.ts ? esc(e.f.ts.replace('T', ' ')) + ' UTC' : 'no time'} · ${e.f.lat != null ? fmtCoord(e.f.lat, true) + ' ' + fmtCoord(e.f.lon, false) : (e.f.port ? esc(e.f.port) : 'no position')} · ${e.f.m3 != null && !isNaN(e.f.m3) ? e.f.m3 + ' m³' : 'no quantity'}${e.audit && e.audit.nearest_coast_nm != null ? ' · ≈ ' + e.audit.nearest_coast_nm.toFixed(1) + ' nm from coast' : ''}${e.audit && e.audit.zones.length ? ' · ' + e.audit.zones.map(z => esc(z.name)).join(', ') : ''}</div></div>`);
+    if (!e.findings.length) h.push(`<div class="fnd" data-sev="ok"><b>No findings.</b> Entry is complete and no applicable rule reports a prohibition at this position. Conditions of the applicable regulation still apply.</div>`);
+    for (const x of e.findings) h.push(`<div class="fnd" data-sev="${x.severity}"><b>${esc(x.severity.replace('_', ' ').toUpperCase())}</b> · <span class="k">${esc(x.kind)} / ${esc(x.code)}</span><div>${esc(x.message)}</div>${x.rule_id ? `<div class="k">rule ${esc(x.rule_id)}${x.zone_id ? ' · zone ' + esc(x.zone_id) : ''}${x.regulation ? ' · ' + esc(x.regulation) : ''}${x.fact_level ? ' · ' + esc(x.fact_level) : ''}</div>` : ''}</div>`);
+    if (e.audit) h.push(`<p class="hint">Regulatory findings come from the shared position evaluation (${e.audit.results.length} rules fired, dataset ${esc(e.audit.dataset_version)}); the full audit record is stored with the entry.</p>`);
+    $('rb-result').innerHTML = h.join('');
+  }
+  // ---- save ----
+  async function saveEntry() {
+    if (!lastEval) return; const e = lastEval, f = e.f; $('rb-save').disabled = true;
+    try {
+      const bid = await bookId();
+      const no = (entries.length ? Math.max(...entries.map(x => x.entry_no)) : 0) + 1;
+      const quantities = curTpl.book === 'GRB' ? { category: f.cat, m3: f.m3 } : { m3: f.m3, tank: f.tank, item: f.item, treatment: f.treat, min_depth_m: f.depth ? Number(f.depth) : null };
+      const entry = await insertRet('rb_entry', { book_id: bid, entry_no: no, template_id: curTpl.id, operation_code: f.op, ts_utc: f.ts ? new Date(f.ts + 'Z').toISOString() : new Date().toISOString(), ts_end_utc: f.ts2 ? new Date(f.ts2 + 'Z').toISOString() : null,
+        geom: f.lat != null ? `SRID=4326;POINT(${f.lon} ${f.lat})` : null, port: f.port || null, quantities, method: f.op, officer: f.officer || null, remarks: [f.text, f.reason, f.remarks].filter(Boolean).join(' | ') || null, source: 'manual' });
+      let evalId = null;
+      if (e.audit) { const ev = await insertRet('evaluation', { geom: `SRID=4326;POINT(${f.lon} ${f.lat})`, evaluation_date: e.audit.evaluation_date, vessel_id: curVessel.id, vessel_snapshot: e.audit.vessel, dataset_version: e.audit.dataset_version, zones_hit: e.audit.zones.map(z => z.id), result: e.audit }); evalId = ev.id; }
+      for (const x of e.findings) await insertRet('rb_finding', { entry_id: entry.id, kind: x.kind, severity: x.severity, code: x.code, message: x.message, rule_id: x.rule_id || null, zone_id: x.zone_id || null, evaluation_id: x.kind === 'regulatory' ? evalId : null, evidence: x.evidence || { regulation: x.regulation, fact_level: x.fact_level } });
+      $('rb-result').innerHTML = `<div class="fnd" data-sev="ok"><b>Saved</b> entry #${no} with ${e.findings.length} finding(s).</div>` + $('rb-result').innerHTML;
+      await loadEntries(); form();
+    } catch (err) { $('rb-result').innerHTML = `<div class="fnd" data-sev="warning"><b>Not saved:</b> ${esc(err.message)}</div>` + $('rb-result').innerHTML; $('rb-save').disabled = false; }
+  }
+  function renderList() {
+    const open = entries.reduce((n, e) => n + (e.rb_finding || []).filter(x => x.status === 'open' && SEV_RANK[x.severity] >= 1).length, 0);
+    $('rb-count').textContent = entries.length ? `${entries.length} entries · ${open} open findings` : '';
+    if (!entries.length) { $('rb-list').innerHTML = '<p class="hint">No entries yet for this vessel/book.</p>'; return; }
+    $('rb-list').innerHTML = entries.map(e => { const fs = e.rb_finding || []; const worst = fs.reduce((m, x) => Math.max(m, SEV_RANK[x.severity] || 0), 0); const st = fs.some(x => x.kind === 'form') && worst < 2 ? 'INCOMPLETE' : STATUS_OF[worst];
+      return `<div class="ent"><div class="h"><b>#${e.entry_no} · ${esc(e.operation_code)}${e.quantities && e.quantities.category ? ' · cat. ' + esc(e.quantities.category) : ''}</b><span class="badge" data-s="${st}">${st.replace('_', ' ')}</span></div><div class="sub">${esc(new Date(e.ts_utc).toISOString().slice(0, 16).replace('T', ' '))} UTC${e.port ? ' · ' + esc(e.port) : ''}${e.quantities && e.quantities.m3 != null ? ' · ' + e.quantities.m3 + ' m³' : ''}${e.officer ? ' · ' + esc(e.officer) : ''}</div>${fs.map(x => `<div class="fnd" data-sev="${x.severity}"><b>${esc(x.severity.replace('_', ' ').toUpperCase())}</b> <span class="k">${esc(x.code)}${x.rule_id ? ' · ' + esc(x.rule_id) : ''}${x.status !== 'open' ? ' · ' + esc(x.status) : ''}</span><div>${esc(x.message)}</div></div>`).join('')}</div>`; }).join('');
+  }
+  // ---- wiring ----
+  async function afterSignIn() {
+    $('au-who').textContent = `${user.email} · ${role()}`; $('rb-auth').hidden = true; $('rb-main').hidden = false;
+    try { await loadTemplates(); await loadVessels(); selectBook(); } catch (e) { $('rb-tplinfo').textContent = 'Could not load templates/vessels: ' + e.message; }
+  }
+  function selectBook() { curTpl = TPL[$('rb-book').value]; if (!curTpl) { $('rb-tplinfo').textContent = 'No template for this book in the database.'; $('rb-op').innerHTML = ''; $('rb-form').innerHTML = ''; return; } $('rb-tplinfo').innerHTML = `Template <code>${esc(curTpl.id)}</code> · ${esc(curTpl.regulation_basis)} · <b>${esc(curTpl.approval_status)}</b>${curTpl.approval_status !== 'approved' ? ' — pending verification against the official appendix' : ''}`; opList(); form(); loadEntries(); }
+  function init() {
+    if (!HAS_DB) { $('rb-auth').innerHTML = '<p class="hint">Record books need the Supabase database (config.js).</p>'; return; }
+    $('au-btn').onclick = async () => { $('au-msg').textContent = 'Signing in…'; try { await signIn($('au-email').value.trim(), $('au-pass').value); $('au-msg').textContent = ''; afterSignIn(); } catch (e) { $('au-msg').textContent = e.message; } };
+    $('au-pass').addEventListener('keydown', e => { if (e.key === 'Enter') $('au-btn').click(); });
+    $('au-out').onclick = signOut;
+    $('rb-vessel').onchange = () => { curVessel = vessels.find(v => v.id === $('rb-vessel').value) || null; loadEntries(); };
+    $('rb-book').onchange = selectBook; $('rb-op').onchange = form;
+    $('rb-eval').onclick = () => { if (!curVessel) { alert('Select or add a vessel first.'); return; } $('rb-result').innerHTML = '<p class="hint">Evaluating…</p>'; evaluateEntry().catch(e => { $('rb-result').innerHTML = `<div class="fnd" data-sev="warning">${esc(e.message)}</div>`; }); };
+    $('rb-save').onclick = saveEntry;
+    $('nv-btn').onclick = async () => { try { const v = await insertRet('vessel', { name: $('nv-name').value.trim(), imo: $('nv-imo').value.trim() || null, gt: parseInt($('nv-gt').value) || null, ship_type: $('nv-type').value, flag: $('nv-flag').value.trim() || null }); await loadVessels(); $('rb-vessel').value = v.id; curVessel = v; $('rb-addv').open = false; loadEntries(); } catch (e) { alert('Vessel not saved: ' + e.message); } };
+    if (restore()) afterSignIn();
+  }
+  return { init };
+})();
+
+loadData().then(src => { ui = initUI(src); rb.init(); }).catch(e => { console.error(e); document.getElementById('dbody').textContent = 'Data could not be loaded: ' + e; });
 
 </script>
 </body>
